@@ -288,19 +288,21 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 
 
-# 9 ### PYTHON ######
-find_package(PythonInterp 2.7 REQUIRED)
-# python will be used to run some f.
-# Now look for NumPy
+## 9 ### PYTHON ######
+#find_package(PythonInterp 3.9 REQUIRED)
+## python will be used to run some f.
+## Now look for ffeatools
+## When we have Python 3 ffeatools pip install we can check for ffeatools rather than NUMPY
 execute_process(
-    COMMAND "${PYTHON_EXECUTABLE}" -c "from __future__ import print_function\ntry:\n\t import numpy\n\t print('OK',end=\"\")\nexcept:\n\t print('FAIL',end=\"\")"
-    OUTPUT_VARIABLE NUMPY_FOUND)
-if ("${NUMPY_FOUND}" STREQUAL "FAIL")
-  message(WARNING "NumPy was not found: Several tests won't be run, and the ffeatools script and API will be mostly unusable")
-endif ("${NUMPY_FOUND}" STREQUAL "FAIL")
-if  ("${NUMPY_FOUND}" STREQUAL "OK")
-  message(STATUS "Found NumPy")
-endif  ("${NUMPY_FOUND}" STREQUAL "OK")
+    COMMAND "Python" -c "from __future__ import print_function\ntry:\n\t import ffeatools\n\t print('OK',end=\"\")\nexcept:\n\t print('FAIL',end=\"\")"
+	#COMMAND "${PYTHON_EXECUTABLE}" -c "from __future__ import print_function\ntry:\n\t import numpy\n\t print('OK',end=\"\")\nexcept:\n\t print('FAIL',end=\"\")"
+    OUTPUT_VARIABLE FFEATOOLS_FOUND)
+if ("${FFEATOOLS_FOUND}" STREQUAL "FAIL")
+  message(WARNING "FFEATOOLS was not found: Several tests won't be run, and the ffeatools script and API will be mostly unusable")
+endif ("${FFEATOOLS_FOUND}" STREQUAL "FAIL")
+if  ("${FFEATOOLS_FOUND}" STREQUAL "OK")
+  message(STATUS "Found ffeatools")
+endif  ("${FFEATOOLS_FOUND}" STREQUAL "OK")
 
 
 
@@ -366,15 +368,15 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/src")
 #######################################
 ######## INSTALL THE FFEA TOOLS  ######
 # 1 - Set up the install python path
-include(${CMAKE_ROOT}/Modules/FindPythonInterp.cmake)
-set(PYTHONSTUFF "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/ffeatools")
+#include(${CMAKE_ROOT}/Modules/FindPythonInterp.cmake)
+#set(PYTHONSTUFF "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/ffeatools")
 # Debian and derivatives use dist-packages instead of site-packages. 
-if (USE_PACK_DIST STREQUAL "DEB")
-  set(PYTHONSTUFF "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/dist-packages/ffeatools")
-endif(USE_PACK_DIST STREQUAL "DEB")
+#if (USE_PACK_DIST STREQUAL "DEB")
+#  set(PYTHONSTUFF "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/dist-packages/ffeatools")
+#endif(USE_PACK_DIST STREQUAL "DEB")
 
 # 2 - and go through the folders:
-add_subdirectory("${PROJECT_SOURCE_DIR}/ffeatools")
+#add_subdirectory("${PROJECT_SOURCE_DIR}/ffeatools")
 #######################################
 
 
@@ -387,9 +389,9 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/tests/consistency")
 add_subdirectory("${PROJECT_SOURCE_DIR}/tests/physics")
 add_subdirectory("${PROJECT_SOURCE_DIR}/tests/ffeatools")
 add_subdirectory("${PROJECT_SOURCE_DIR}/tests/rods")
-set(IGNORE_NUMPY_TESTS "")
-if (${NUMPY_FOUND} STREQUAL "FAIL")
-  set(IGNORE_NUMPY_TESTS 
+set(IGNORE_FFEATOOLS_TESTS "")
+if ("${FFEATOOLS_FOUND}" STREQUAL "FAIL")
+  set(IGNORE_FFEATOOLS_TESTS 
        python_load_trajectory
        sphere_diffusion_mass sphere_diffusion_mass_check
        sphere_diffusion_nomass sphere_diffusion_nomass_check
@@ -399,13 +401,13 @@ if (${NUMPY_FOUND} STREQUAL "FAIL")
        cyl_flexrig cyl_flexrig_check)
   message("--------------------------------------------------------")
   message("-----------------WARNING--------------------------------")
-  message(STATUS "NumPy could not be found. This means that:")
+  message(STATUS "FFEATOOLS could not be found. This means that:")
   message(STATUS "   'ffeatools' - the python package, will fail to import")
   message(STATUS "   'ffeatools' - the script, will only be partially useful")
   message(STATUS "   Several tests have been discarted and will not run.")
   message(STATUS "Your installation will still be complete.")
   message("--------------------------------------------------------")
-endif(${NUMPY_FOUND} STREQUAL "FAIL")
+endif("${FFEATOOLS_FOUND}" STREQUAL "FAIL")
 configure_file("${PROJECT_SOURCE_DIR}/CTestCustom.in"
                  "${PROJECT_BINARY_DIR}/CTestCustom.cmake" @ONLY)
 #####################################################
@@ -447,7 +449,7 @@ endif()
 # sudo dpkg -i ffea_1.0_amd64.deb
 # sudo apt-get install -f 
 # or 
-# sudo apt-get install python2.7 python-numpy python-matplotlib libgomp1
+# sudo apt-get install python3.9 python-numpy python-matplotlib libgomp1
 # sudo dpkg -i ffea_1.0_amd64.deb
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
 set(CPACK_DEBIAN_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
