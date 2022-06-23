@@ -16,3 +16,6 @@ external/boost/tools/build/bjam
 external/boost/tools/build/bootstrap.log
 external/boost/tools/build/src/engine/bin.linuxx86_64/
 external/boost/tools/build/src/engine/bootstrap/
+#Notepad++
+nppBackup/
+
