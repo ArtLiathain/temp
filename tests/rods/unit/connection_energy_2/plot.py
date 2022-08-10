@@ -1,19 +1,41 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
 """
-Created on Fri Jun 14 13:00:00 2019
+  This file is part of the FFEA simulation package
 
-@author: rob
-""" 
+  Copyright (c) by the Theory and Development FFEA teams,
+  as they appear in the README.md file.
 
-import matplotlib.pyplot as plt
+  FFEA is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  FFEA is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with FFEA.  If not, see <http://www.gnu.org/licenses/>.
+
+  To help us fund FFEA development, we humbly ask that you cite
+  the research papers on the package.
+"""
+
+import sys
 import subprocess
+import matplotlib.pyplot as plt
+
 
 def read(log_file):
+    """
+    Reads the log file and puts the information into a dictionary.
+    """
     results_dict = {0:{}, 1: {}, 2: {}, 3:{} }
-    for key, value in results_dict.iteritems():
+    #for key, value in results_dict.iteritems():
+    for key, value in results_dict.items():
         results_dict[key] = { "+x": {}, "-x":{}, "+y":{}, "-y":{}, "+z":{}, "-z":{} }
-        
+
     with open(log_file) as log:
         for line in log.readlines():
             if "ENERGYPLOT" in line:
@@ -28,15 +50,19 @@ def read(log_file):
                 results_dict[node_index]["-z"][displacement] = float(line_list[11])
             if "EXPLODING" in line:
                 line_list = line.split(" ")
-                
+
     return results_dict
 
 def plot_one(plusdict, minusdict, node_index, axis, filename):
+    """
+    Creates a single plot.
+    """
     x = []
     y = []
-    minuskeys = minusdict.keys()
+    #minuskeys = minusdict.keys()
+    minuskeys = list(minusdict.keys())
     minuskeys.reverse()
-    minusvalues = minusdict.values()
+    minusvalues = list(minusdict.values())
     minusvalues.reverse()
     for key in minuskeys:
         x.append(key*-1)
@@ -46,7 +72,7 @@ def plot_one(plusdict, minusdict, node_index, axis, filename):
         y.append(value)
     for value in plusdict.values():
         y.append(value)
-        
+
     plt.plot(x, y)
     plt.xlabel("Displacement")
     plt.ylabel("Energy")
@@ -58,16 +84,26 @@ def plot_one(plusdict, minusdict, node_index, axis, filename):
     return x, y
 
 def plot_all(results_dict):
+    """
+    Call plot_one to create all the plots.
+    """
     for index in [0,1,2,3]:
         for axis in ["x", "y", "z"]:
-            plot_one(results_dict[index]["+"+axis], results_dict[index]["-"+axis], index, axis, "node_"+str(index)+"_"+axis+"_axis.pdf")
+            plot_one(results_dict[index]["+"+axis],
+                     results_dict[index]["-"+axis],
+                     index,
+                     axis,
+                     "node_"+str(index)+"_"+axis+"_axis.pdf")
     return
 
 def auto():
-    with open("log.txt", "wb") as f:
-        subprocess.call(["../../../../src/ffea", "connection_energy_2.ffeatest"], stdout=f)
+    """
+    A helper function.
+    """
+    with open("log.txt", "wb") as fileout:
+        subprocess.call(["../../../../src/ffea", "connection_energy_2.ffeatest"], stdout=fileout)
         plot_all(read("log.txt"))
-        raise SystemExit, 0
-    
+        sys.exit(0)
+
 if __name__ == "__main__":
     auto()
