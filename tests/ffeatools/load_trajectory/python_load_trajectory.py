@@ -1,50 +1,55 @@
-# -*- coding: utf-8 -*-
-# 
-#  This file is part of the FFEA simulation package
-#  
-#  Copyright (c) by the Theory and Development FFEA teams,
-#  as they appear in the README.md file. 
-# 
-#  FFEA is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-# 
-#  FFEA is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-# 
-#  You should have received a copy of the GNU General Public License
-#  along with FFEA.  If not, see <http://www.gnu.org/licenses/>.
-# 
-#  To help us fund FFEA development, we humbly ask that you cite 
-#  the research papers on the package.
-#
-
+#!/usr/bin/env python
 """
-Created on Thu Sep 29 17:12:39 2016
+  This file is part of the FFEA simulation package
 
-@author: py12rw
+  Copyright (c) by the Theory and Development FFEA teams,
+  as they appear in the README.md file.
+
+  FFEA is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  FFEA is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with FFEA.  If not, see <http://www.gnu.org/licenses/>.
+
+  To help us fund FFEA development, we humbly ask that you cite
+  the research papers on the package.
 """
 
 import sys
 
+
+# test for importing ffea_trjectory
 try:
-    from ffeatools.modules import * # python package
-except:
+    import ffeatools  # python package
+except ImportError:
     try:
-        import FFEA_trajectory
+        print("python_load_trajectory: Failure to import ffeatools")
+        from ffeatools import FFEA_trajectory
     except ImportError:
-        print("Failure to import FFEA_trajectory")
+        print("python_load_trajectory: Failure to import ffea_trajectory")
         sys.exit(1) # failure to import
 
+
+# test for using ffea_trajectory
 try:
-    test_load_traj = FFEA_trajectory.FFEA_trajectory("unit_test_traj.ftj")
+    from ffeatools import FFEA_trajectory
+    test_load_trajectory = FFEA_trajectory.FFEA_trajectory("unit_test_traj.ftj")
     sys.exit(0)
-except IOError:
-    print("Couldn't find trajectroy file that's supposed to be packed in with these tests. Probably a CMake issue!")
+except OSError:
+    print("python_load_trajectory: ")
+    print("Could not find trajectroy file in test directory.")
     sys.exit(1)
-except Exception, e:
-    print(e)
+except SystemExit as error:
+    #print(f"Unexpected {error=}, {type(error)=}")
+    sys.exit(0)
+except BaseException as error:
+    print("python_load_trajectory: Unexpected error")
+    print(f"Unexpected {error=}, {type(error)=}")
     sys.exit(1)
