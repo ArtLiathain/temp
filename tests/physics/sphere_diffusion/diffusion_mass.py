@@ -27,30 +27,14 @@ As understood when converting to Python 3 in August 2022.
 
 import sys
 import numpy as np
-
-#FFEATOOLS_FOUND = False
-#try:
-#    import ffeatools # python package
-#    FFEATOOLS_FOUND = True
-#    FFEA_script = ffeatools.ffea_script_jl
-#    FFEA_material = ffeatools.ffea_material_jl
-#except ImportError:
-#    print("diffussion_mass.py: Failure to import relevent FFEAtools modules")
-#    sys.exit(1) # failure to import
-    
-    
-from ffeatools import ffea_script_jl as ffea_script_jl
-from ffeatools import ffea_material_jl as ffea_material_jl
+from ffeatools import ffea_script
+from ffeatools import ffea_material
 
 # Load trajectory
 START = 5000
 # START = 0
 END = 10000
-script = ffea_script_jl.ffea_script_jl(sys.argv[1])
-#try:
-#    script = FFEA_script.ffea_script_jl(sys.argv[1])
-#except:
-#    sys.exit("diffussion_mass.py: Failure to process ffea script!")
+script = ffea_script.ffea_script(sys.argv[1])
 
 trajectory = script.load_trajectory(start=START, num_frames = END-START)
 END = trajectory.num_frames + START

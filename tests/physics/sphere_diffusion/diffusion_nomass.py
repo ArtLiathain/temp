@@ -27,32 +27,47 @@ As understood when converting to Python 3 in August 2022.
 import sys
 import numpy as np
 
+# This set of import exceptions looks odd to me. I do not understand
+# what the aim of them is but I have left them here as it does no
+# harm. It may be a check that the right virtual python environment
+# is being used.
 print("sys.argv[1]:- ")
 print(sys.argv[1])
 FFEATOOLS_FOUND = False
-#try:
-#    import ffeatools # python package
-#    FFEATOOLS_FOUND = True
-#    FFEA_script = ffeatools.ffea_script_jl
-#    FFEA_material = ffeatools.ffea_material_jl
-#except ImportError:
-#    print("diffussion_nomass.py: Failure to import relevent FFEAtools modules")
-#    sys.exit(1) # failure to import ffeatools
-
-#import ffeatools.ffea_script_jl as ffea_script_jl
-
-from ffeatools import ffea_script_jl as ffea_script_jl
+try:
+    import ffeatools # python package
+    #FFEATOOLS_FOUND = True
+except ImportError:
+    print("diffussion_nomass.py: Failure to import ffeatools module")
+    sys.exit(1) # failure to import ffeatools
+try:
+    #import ffea_script = ffeatools.ffea_script
+    from ffeatools import ffea_script as ffea_script
+except ImportError:
+    print("diffussion_nomass.py: Failure to import ffea_script module")
+    sys.exit(1) # failure to import ffea_script
+try:
+    #ffea_material = ffeatools.ffea_material
+    from ffeatools import ffea_material as ffea_material
+except ImportError:
+    print("diffussion_nomass.py: Failure to import ffea_material module")
+    sys.exit(1) # failure to import ffea_material
+FFEATOOLS_FOUND = True
+# from ffeatools import ffea_script as ffea_script
 
 # Load trajectory
 START = 5000
 # START = 0
 END = 10000
 
-script = ffea_script_jl.ffea_script_jl(sys.argv[1])
-#try:
-#    script = ffeatools.ffea_script_jl(sys.argv[1])
-#except:
-#    sys.exit("diffussion_nomass.py: Failure to process ffea script!")
+script = ffea_script.ffea_script(sys.argv[1])
+try:
+    script = ffea_script.ffea_script(sys.argv[1])
+except Exception:
+    # This is a very general exception. I think ffea_scripts
+    # handles this exception and it probably will not come back
+    # this far.
+    sys.exit("diffussion_nomass.py: Failure to process ffea script!")
 
 
 traj = script.load_trajectory(start=START, num_frames=END-START)

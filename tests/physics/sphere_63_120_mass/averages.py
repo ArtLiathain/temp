@@ -35,7 +35,7 @@ def read_and_average(file_in, first, last, heading):
     data = []
     averages = {}
     fields = heading.keys()
-    with open(file_in, 'r') as file:
+    with open(file_in, 'r', encoding="utf-8") as file:
         while file.readline() != "Measurements:\n":
             continue
 
@@ -86,7 +86,7 @@ ERROR = 0
 for f in filein:
     print(f)
     averages_list = read_and_average(f, INITIAL, END, energy)
-    for s in Tol.keys():
+    for s in Tol:
         print(averages_list[s])
         if averages_list[s][0] < Tol[s]:
             #print s, ": correct ", A[s][0], " < ", Tol[s]

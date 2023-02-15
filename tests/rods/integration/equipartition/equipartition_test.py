@@ -1,53 +1,52 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  This file is part of the FFEA simulation package
+#
+#  Copyright (c) by the Theory and Development FFEA teams,
+#  as they appear in the README.md file.
+#
+#  FFEA is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  FFEA is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with FFEA.  If not, see <http://www.gnu.org/licenses/>.
+#
+#  To help us fund FFEA development, we humbly ask that you cite
+#  the research papers on the package.
+#
 """
-  This file is part of the FFEA simulation package
+  equipartition_test.py
 
-  Copyright (c) by the Theory and Development FFEA teams,
-  as they appear in the README.md file.
+  One of the test for the rod part of the program.
 
-  FFEA is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+  This file is not part of the standard ffea core standard tests. It was
+  converted to the Python 3 version of the ffeatools in 2022 to 2023.
 
-  FFEA is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with FFEA.  If not, see <http://www.gnu.org/licenses/>.
+  I have tried to edit it so that it works with the new python version of the
+  ffeatools. It may be an integration test but here it also runs as one of the
+  ffea core test run after instll of the C++ code.
 
-  To help us fund FFEA development, we humbly ask that you cite
-  the research papers on the package.
 """
 
-# allow old-style pythonpath or new module imports
+
 import sys
-#from ffeatools import wrap
-from ffeatools import ffea_script_jl as ffea_script_jl
-from ffeatools import ffea_rod_jl as FFEA_rod
-#from ffeatools import ffea_rod_jl.cc_extractor as ndc_extractor
-#import ndc_extractor = FFEA_rod.cc_extractor
-
-
-#try:
-#    import wrap
-#    import FFEA_script
-#    import FFEA_rod
-#    ndc_extractor = FFEA_rod.cc_extractor
-#except ImportError:
-#    from ffeatools import wrap
-#    from ffeatools import FFEA_script
-#    from ffeatools import FFEA_rod
-#    import ffeatools.rod.cc_extractor as ndc_extractor
-
-
 import numpy as np
 import matplotlib.pyplot as plt
+from ffeatools import ffea_script
+#from ffeatools import ffea_rod
+from ffeatools.rod import analysis
+from ffeatools.rod import math4rod
 
-#import sys
-#sys.path.insert(0, '/home/rob/pCloudSync/scratchpad/ndc_full_reader/') # not my fault
+
 
 
 def plot_energy_histogram(energy,
@@ -88,10 +87,10 @@ def plot_energy_histogram(energy,
 
 def get_x(stretch_analysis, twist_analysis, bend_analysis):
     """
-    Gets the x values as understood when converting 
+    Gets the x values as understood when converting
     to Python 3 in August 2022
     """
-    delta_omega, L_i = FFEA_rod.ndc_extractor.get_delta_omega(bend_analysis, fast=False)
+    delta_omega, L_i = rod.ndc_lib.get_delta_omega(bend_analysis, fast=False)
     delta_omega = delta_omega.reshape( [np.shape(delta_omega)[0]*np.shape(delta_omega)[1], 2] )
     delta_omega_1 = delta_omega[:,0]
     delta_omega_2 = delta_omega[:,1]
@@ -110,7 +109,16 @@ def plot_x_histograms(analyses, bin_no=100, bin_range=None):
     when converting to Python 3 in August 2022
     """
 
-    def hist_plot(x, plotname, analytical_formula, k, xlabel="Thing", ylabel="Probability (normalized)", num_bins=None, bin_range=None, col='c'):
+    def hist_plot(x,
+                  plotname,
+                  analytical_formula,
+                  k,
+                  xlabel="Thing",
+                  ylabel="Probability (normalized)",
+                  num_bins=None,
+                  bin_range=None,
+                  col='c'):
+
         values, bins, patches = plt.hist(x, bins=num_bins, range=bin_range, density=True, color=col)
         P = analytical_formula(300, bins, k)
         P_norm = normalize_P(P, bins)
@@ -131,25 +139,25 @@ def plot_x_histograms(analyses, bin_no=100, bin_range=None):
               "stretch_x",
               get_P,
               analyses[0].rod.material_params[0][0][0]/L_i_str,
-              "$\Delta P$",
+              r"$\Delta P$",
               col="b",
               num_bins=bin_no)
     hist_plot(delta_x_dof[1],
-              "bend_omega_1_x",
+              r"bend_omega_1_x",
               get_P,
               analyses[2].rod.B_matrix[0][0][0]/L_i_bend,
-              "$\Delta \omega_1$",
+              r"$\Delta \omega_1$",
               col="r",
               num_bins=bin_no)
     hist_plot(delta_x_dof[2],
-              "bend_omega_2_x",
+              r"bend_omega_2_x",
               get_P,
               analyses[2].rod.B_matrix[0][0][0]/L_i_bend,
-              "$\Delta \omega_2$",
+              r"$\Delta \omega_2$",
               col="r",
               num_bins=bin_no)
     hist_plot(delta_x_dof[3],
-              "twist_x",
+              r"twist_x",
               get_P,
               analyses[1].rod.material_params[0][0][1]/L_i_twist,
               r'$\Delta \theta $',
@@ -185,12 +193,7 @@ def normalize_P(P, bins):
 
 def main():
 
-    #try:
-    #    wrap.wrap_process("../../../../src/ffea", ["realistic.ffea"])
-    #except OSError:
-    #    raise
-
-    script = FFEA_script.FFEA_script("2/realistic.ffea")
+    script = ffea_script.ffea_script("2/realistic.ffea")
 
     temp = 300 #kelvin
     analytical_kbT = temp*1.38064852 * 10**-23
@@ -200,38 +203,38 @@ def main():
     twisty_rod = script.rod[2]
 
     #Bendy rod
-    bendy_analysis = FFEA_rod.anal_rod(bendy_rod)
+    bendy_analysis = analysis.analysis(bendy_rod)
     bendy_analysis.get_equipartition()
     bendy_rod_avg_energy = np.average(bendy_analysis.bending_energy)
     print("Bendy energy = "+str(bendy_rod_avg_energy))
     # 2 axes of bending = more D.O.F., see paper!
     print("Equipartition energy = "+str(1*analytical_kbT))
-    bend_equal = FFEA_rod.rod_math.approximately_equal(1*analytical_kbT, bendy_rod_avg_energy, 0.08)
+    bend_equal = math4rod.approximately_equal(1*analytical_kbT, bendy_rod_avg_energy, 0.08)
     print("Bendy status: "+str(bend_equal))
     print("---")
 
     #Stretchy rod
-    stretchy_analysis = FFEA_rod.anal_rod(stretchy_rod)
+    stretchy_analysis = analysis.analysis(stretchy_rod)
     stretchy_analysis.get_equipartition()
     stretchy_rod_avg_energy = stretchy_analysis.stretch_energy
     stretchy_time_avg_energy = np.average(stretchy_rod_avg_energy)
     print("Stretchy energy = "+str(stretchy_time_avg_energy))
     print("Equipartition energy = "+str(0.5*analytical_kbT))
-    stretch_equal = FFEA_rod.rod_math.approximately_equal(0.5*analytical_kbT,
-                                                          stretchy_time_avg_energy,
-                                                          0.08)
+    stretch_equal = math4rod.approximately_equal(0.5*analytical_kbT,
+                                                     stretchy_time_avg_energy,
+                                                     0.08)
     print("Stretchy status: "+str(stretch_equal))
     print("---")
 
     #Twisty rod
-    twisty_analysis = FFEA_rod.anal_rod(twisty_rod)
+    twisty_analysis = analysis.analysis(twisty_rod)
     twisty_analysis.get_equipartition()
     twisty_rod_avg_energy = np.average(twisty_analysis.twist_energy[:100])
     print("Tiwsty energy = "+str(twisty_rod_avg_energy))
     print("Equipartition energy = "+str(0.5*analytical_kbT))
-    twist_equal = FFEA_rod.rod_math.approximately_equal(0.5*analytical_kbT,
-                                                        twisty_rod_avg_energy,
-                                                        0.08)
+    twist_equal = math4rod.approximately_equal(0.5*analytical_kbT,
+                                                   twisty_rod_avg_energy,
+                                                   0.08)
     print("Twisty status: "+str(twist_equal))
     print("---")
 

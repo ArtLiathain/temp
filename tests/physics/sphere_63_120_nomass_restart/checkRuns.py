@@ -44,7 +44,7 @@ CPT = ["sphere_63_120_nomass_6-10steps.fcp",
        "sphere_63_120_nomass_10steps.fcp"]
 STA = []
 for filename in CPT:
-    with open(filename, 'r') as file:
+    with open(filename, 'r', encoding="utf-8") as file:
         STA.append(file.readlines())
 
 for item in range(2):
@@ -63,7 +63,7 @@ MSM = ["sphere_63_120_nomass_I_measurement.out",
 STA = []
 for filename in MSM:
     tmpT = []
-    with open(filename, 'r') as file:
+    with open(filename, 'r', encoding="utf-8") as file:
         while file.readline() != "Measurements:\n":
             continue
         file.readline() # skip the header

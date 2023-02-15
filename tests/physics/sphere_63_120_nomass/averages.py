@@ -34,7 +34,7 @@ def read_and_average(file_in, first, last, eq_energy, fields):
     """
     data = []
     averages = {}
-    with open(file_in, 'r') as file:
+    with open(file_in, 'r', encoding="utf-8") as file:
         while file.readline() != "Measurements:\n":
             continue
 

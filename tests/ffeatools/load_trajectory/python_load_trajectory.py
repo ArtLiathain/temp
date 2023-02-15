@@ -31,7 +31,7 @@ try:
 except ImportError:
     try:
         print("python_load_trajectory: Failure to import ffeatools")
-        from ffeatools import FFEA_trajectory
+        from ffeatools import ffea_trajectory
     except ImportError:
         print("python_load_trajectory: Failure to import ffea_trajectory")
         sys.exit(1) # failure to import
@@ -39,8 +39,8 @@ except ImportError:
 
 # test for using ffea_trajectory
 try:
-    from ffeatools import FFEA_trajectory
-    test_load_trajectory = FFEA_trajectory.FFEA_trajectory("unit_test_traj.ftj")
+    from ffeatools import ffea_trajectory
+    test_load_trajectory = ffea_trajectory.ffea_trajectory("unit_test_traj.ftj")
     sys.exit(0)
 except OSError:
     print("python_load_trajectory: ")

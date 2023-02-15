@@ -26,17 +26,7 @@
 import sys
 from math import sqrt, pi
 import numpy as np
-from ffeatools import ffea_script_jl as ffea_script_jl
-#FFEATOOLS_FOUND = False
-#try:
-#    import ffeatools# python package
-#    FFEA_script = ffeatools.ffea_script_jl
-#    FFEATOOLS_FOUND = True
-#except ImportError:
-#    print("calcEi.py: Failure to import FFEA_trajectory")
-#    sys.exit(1) # failure to import
-
-
+from ffeatools import ffea_script
 
 
 # INPUT STUFF
@@ -62,8 +52,8 @@ ENDNODES = [60, 61, 63, 66, 67, 69, 72, 73, 75, 78,
             4382, 4383, 4384, 4385, 4386, 4387, 4388, 4389, 4390, 4391,
             4392, 4393, 4394, 4395, 4396, 4397, 4398, 4399, 4400, 4401]
 
-script = ffea_script_jl.ffea_script_jl(FILEIN)
-#script = FFEA_script.ffea_script_jl(FILEIN)
+script = ffea_script.ffea_script(FILEIN)
+
 
 trj = script.load_trajectory()
 

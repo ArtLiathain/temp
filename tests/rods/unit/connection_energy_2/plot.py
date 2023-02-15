@@ -36,7 +36,7 @@ def read(log_file):
     for key, value in results_dict.items():
         results_dict[key] = { "+x": {}, "-x":{}, "+y":{}, "-y":{}, "+z":{}, "-z":{} }
 
-    with open(log_file) as log:
+    with open(log_file, encoding="utf-8") as log:
         for line in log.readlines():
             if "ENERGYPLOT" in line:
                 line_list = line.split(" ")
@@ -94,7 +94,6 @@ def plot_all(results_dict):
                      index,
                      axis,
                      "node_"+str(index)+"_"+axis+"_axis.pdf")
-    return
 
 def auto():
     """

@@ -32,7 +32,7 @@ def read_and_store(file_in):
     """
     data = []
     changed_data = {}
-    with open(file_in, 'r') as file:
+    with open(file_in, 'r', encoding="utf-8") as file:
         while file.readline() != "Measurements:\n":
             continue
 
