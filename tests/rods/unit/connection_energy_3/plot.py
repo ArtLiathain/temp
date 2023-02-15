@@ -1,17 +1,48 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+#  This file is part of the FFEA simulation package
+#
+#  Copyright (c) by the Theory and Development FFEA teams,
+#  as they appear in the README.md file.
+#
+#  FFEA is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  FFEA is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with FFEA.  If not, see <http://www.gnu.org/licenses/>.
+#
+#  To help us fund FFEA development, we humbly ask that you cite
+#  the research papers on the package.
 """
-Created on Fri Jun 14 13:00:00 2019
+file: plot.py
 
-@author: rob
-""" 
+This file is in the test/rod/unit/rod connection_energy_3 directory.
+
+
+Right at the end of this file is a full file name and path for data not included in
+ffea core repository and that I do not have access to. I think this is only called
+conditionally so it should work but be aware if there are problems.
+
+"""
+
+import matplotlib.pyplot as plt
+
 
 def read(log_file):
     results_dict = {0:{}, 1: {}, 2: {}, 3:{} }
-    for key, value in results_dict.iteritems():
+    #for key, value in results_dict.iteritems():
+    for key, value in results_dict.items():
         results_dict[key] = { "+x": {}, "-x":{}, "+y":{}, "-y":{}, "+z":{}, "-z":{} }
-        
-    with open(log_file) as log:
+
+    with open(log_file, encoding="utf-8") as log:
         for line in log.readlines():
             if "ENERGYPLOT" in line:
                 line_list = line.split(" ")
@@ -40,7 +71,7 @@ def plot_one(plusdict, minusdict, node_index, axis, filename):
         y.append(value)
     for value in plusdict.values():
         y.append(value)
-        
+
     plt.plot(x, y)
     plt.xlabel("Displacement")
     plt.ylabel("Energy")
@@ -54,8 +85,11 @@ def plot_one(plusdict, minusdict, node_index, axis, filename):
 def plot_all(results_dict):
     for index in [0,1,2,3]:
         for axis in ["x", "y", "z"]:
-            plot_one(results_dict[index]["+"+axis], results_dict[index]["-"+axis], index, axis, "node_"+str(index)+"_"+axis+"_axis.pdf")
-    return
+            plot_one(results_dict[index]["+"+axis],
+                     results_dict[index]["-"+axis],
+                     index,
+                     axis,
+                     "node_"+str(index)+"_"+axis+"_axis.pdf")
 
 def auto():
     plot_all(read("/home/rob/software/FFEA_Build/tests/rods/unit/connection_energy_2/log.txt"))
