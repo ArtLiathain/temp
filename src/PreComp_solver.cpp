@@ -150,9 +150,9 @@ int PreComp_solver::init(PreComp_params *pc_params, SimulationParams *params, Bl
      return FFEA_ERROR;
    } 
    //  2: the folder exists:
-   b_fs::path p = pc_params->folder;
-   if (b_fs::exists(p)) {
-     if (!b_fs::is_directory(p)) {
+   fs::path p = pc_params->folder;
+   if (fs::exists(p)) {
+     if (!fs::is_directory(p)) {
        FFEA_ERROR_MESSG("\n Folder %s is not a folder\n", pc_params->folder.c_str());
        return FFEA_ERROR;
      }

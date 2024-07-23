@@ -255,7 +255,7 @@ std::vector<float> SimulationParams::vector_from_rvalue(string rvalue)
 int SimulationParams::assign(string lvalue, string rvalue)
 {
 
-    b_fs::path ffea_script = FFEA_script_filename;
+    fs::path ffea_script = FFEA_script_filename;
     FFEA_script_path = ffea_script.parent_path();
     FFEA_script_basename = ffea_script.stem();
 
@@ -694,7 +694,7 @@ int SimulationParams::assign(string lvalue, string rvalue)
     }
     else if (lvalue == "trajectory_out_fname")
     {
-        b_fs::path auxpath = FFEA_script_path / rvalue;
+        fs::path auxpath = FFEA_script_path / rvalue;
         trajectory_out_fname = auxpath.string();
         trajectory_out_fname_set = 1;
         if (userInfo::verblevel > 1)
@@ -702,12 +702,12 @@ int SimulationParams::assign(string lvalue, string rvalue)
     }
     else if (lvalue == "det_measurement_out_fname")
     {
-        b_fs::path auxpath = FFEA_script_path / rvalue;
+        fs::path auxpath = FFEA_script_path / rvalue;
         detailed_meas_out_fname = auxpath.string();
     }
     else if (lvalue == "measurement_out_fname")
     {
-        b_fs::path auxpath = FFEA_script_path / rvalue;
+        fs::path auxpath = FFEA_script_path / rvalue;
         measurement_out_fname = auxpath.string();
         measurement_out_fname_set = 1;
         if (userInfo::verblevel > 1)
@@ -723,7 +723,7 @@ int SimulationParams::assign(string lvalue, string rvalue)
     }
     else if (lvalue == "kinetics_out_fname")
     {
-        b_fs::path auxpath = FFEA_script_path / rvalue;
+        fs::path auxpath = FFEA_script_path / rvalue;
         kinetics_out_fname = auxpath.string();
         kinetics_out_fname_set = 1;
         if (userInfo::verblevel > 1)
@@ -731,7 +731,7 @@ int SimulationParams::assign(string lvalue, string rvalue)
     }
     else if (lvalue == "vdw_in_fname" || lvalue == "ssint_in_fname" || lvalue == "vdw_forcefield_params" || lvalue == "ssint_forcefield_params" || lvalue == "ljparams" || lvalue == "lj_params")
     {
-        b_fs::path auxpath = FFEA_script_path / rvalue;
+        fs::path auxpath = FFEA_script_path / rvalue;
         ssint_in_fname = auxpath.string();
         ssint_in_fname_set = 1;
         if (userInfo::verblevel > 1)
@@ -739,7 +739,7 @@ int SimulationParams::assign(string lvalue, string rvalue)
     }
     else if (lvalue == "rod_lj_in_fname" || lvalue == "rod_lj_in_fname" || lvalue == "rod_vdw_forcefield_params" || lvalue == "rod_lj_params")
     {
-        b_fs::path auxpath = FFEA_script_path / rvalue;
+        fs::path auxpath = FFEA_script_path / rvalue;
         rod_lj_in_fname = auxpath.string();
         rod_lj_in_fname_set = 1;
         if (userInfo::verblevel > 1)
@@ -747,7 +747,7 @@ int SimulationParams::assign(string lvalue, string rvalue)
     }
     else if (lvalue == "checkpoint_in")
     {
-        b_fs::path auxpath = FFEA_script_path / rvalue;
+        fs::path auxpath = FFEA_script_path / rvalue;
         icheckpoint_fname = auxpath.string();
         icheckpoint_fname_set = 1;
         if (userInfo::verblevel > 1)
@@ -755,7 +755,7 @@ int SimulationParams::assign(string lvalue, string rvalue)
     }
     else if (lvalue == "checkpoint_out")
     {
-        b_fs::path auxpath = FFEA_script_path / rvalue;
+        fs::path auxpath = FFEA_script_path / rvalue;
         ocheckpoint_fname = auxpath.string();
         ocheckpoint_fname_set = 1;
         if (userInfo::verblevel > 1)
@@ -763,7 +763,7 @@ int SimulationParams::assign(string lvalue, string rvalue)
     }
     else if (lvalue == "beads_out_fname")
     {
-        b_fs::path auxpath = FFEA_script_path / rvalue;
+        fs::path auxpath = FFEA_script_path / rvalue;
         trajectory_beads_fname = auxpath.string();
         trajbeads_fname_set = 1;
         if (userInfo::verblevel > 1)
@@ -771,7 +771,7 @@ int SimulationParams::assign(string lvalue, string rvalue)
     }
     else if (lvalue == "bsite_in_fname")
     {
-        b_fs::path auxpath = FFEA_script_path / rvalue;
+        fs::path auxpath = FFEA_script_path / rvalue;
         bsite_in_fname = auxpath.string();
         bsite_in_fname_set = 1;
         if (userInfo::verblevel > 1)
@@ -797,19 +797,19 @@ int SimulationParams::assign(string lvalue, string rvalue)
 int SimulationParams::checkFileName(string oFile)
 {
 
-    if (b_fs::exists(oFile)) // does oFile actually exist?
+    if (fs::exists(oFile)) // does oFile actually exist?
     {
         int cnt = 1;
-        b_fs::path fs_oFile = oFile;
+        fs::path fs_oFile = oFile;
         string base = "__" + fs_oFile.filename().string() + "__bckp.";
         if (fs_oFile.parent_path().string().size() != 0)
         {
-            b_fs::path fs_base = fs_oFile.parent_path() / base;
+            fs::path fs_base = fs_oFile.parent_path() / base;
             base = fs_base.string();
         }
 
         string bckp = base + boost::lexical_cast<string>(cnt);
-        while (b_fs::exists(bckp))
+        while (fs::exists(bckp))
         {
             cnt += 1;
             string s_cnt = boost::lexical_cast<string>(cnt);
@@ -817,7 +817,7 @@ int SimulationParams::checkFileName(string oFile)
         }
         FFEA_CAUTION_MESSG("Moving %s to %s\n", oFile.c_str(), bckp.c_str());
         // cout << "FFEA: moving " << oFile << " to " << bckp << "\n";
-        b_fs::rename(oFile, bckp.c_str());
+        fs::rename(oFile, bckp.c_str());
     }
 
     return FFEA_OK;
@@ -1050,13 +1050,13 @@ int SimulationParams::validate(int sim_mode)
 
     if (trajectory_out_fname_set == 0)
     {
-        b_fs::path auxpath = FFEA_script_path / FFEA_script_basename / ".ftj";
+        fs::path auxpath = FFEA_script_path / FFEA_script_basename / ".ftj";
         trajectory_out_fname = auxpath.string();
     }
 
     if (measurement_out_fname_set == 0)
     {
-        b_fs::path auxpath = FFEA_script_path / FFEA_script_basename / ".fm";
+        fs::path auxpath = FFEA_script_path / FFEA_script_basename / ".fm";
         measurement_out_fname = auxpath.string();
     }
 
@@ -1064,7 +1064,7 @@ int SimulationParams::validate(int sim_mode)
     // CPT.1 - If we don't have a name for checkpoint_out we're assigning one.
     if (ocheckpoint_fname_set == 0)
     {
-        b_fs::path fs_ocpt_fname = FFEA_script_filename;
+        fs::path fs_ocpt_fname = FFEA_script_filename;
         fs_ocpt_fname.replace_extension(".fcp");
         ocheckpoint_fname_set = 1;
         ocheckpoint_fname = fs_ocpt_fname.string();

@@ -41,6 +41,10 @@ add_library(ffea_lib
     rod_interactions.cpp rod_structure.cpp rod_blob_interface.cpp
     ffea_test.cpp)
 
+target_compile_features(ffea_lib PUBLIC cxx_std_17)
+target_link_libraries(ffea_lib stdc++fs)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 add_executable(ffea ffea.cpp CG_solver.cpp ConjugateGradientSolver.cpp
     FFEA_user_info.cpp mat_vec_fns.cpp NoMassCGSolver.cpp
     SparseMatrixFixedPattern.cpp World.cpp Blob.cpp rod_math_v9.cpp

@@ -46,7 +46,7 @@
 #endif
 
 namespace b_po = boost::program_options;
-namespace b_fs = boost::filesystem;
+namespace fs = std::filesystem;
 using std::cout;
 using std::endl;
 
@@ -144,8 +144,8 @@ int main(int argc, char *argv[])
     }
 
     // set up a script_fname with the absolute path
-    b_fs::path fs_script_fname = script_fname;
-    b_fs::path canonicalPath = b_fs::canonical(fs_script_fname.parent_path());
+    fs::path fs_script_fname = script_fname;
+    fs::path canonicalPath = fs::canonical(fs_script_fname.parent_path());
     fs_script_fname = canonicalPath / fs_script_fname.filename();
     script_fname = fs_script_fname.string();
     cout << "\tInput FFEA script - " << script_fname << "\n\n";

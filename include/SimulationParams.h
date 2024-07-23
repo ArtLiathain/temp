@@ -32,7 +32,7 @@
 #include <map>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/lexical_cast.hpp>
 
 #include "FFEA_return_codes.h"
@@ -54,7 +54,7 @@
  */
 
 using namespace std;
-namespace b_fs = boost::filesystem;
+namespace fs = filesystem;
 
 /**
  * @detail
@@ -147,7 +147,7 @@ public:
     int pbc_rod;          // !
 
     string FFEA_script_filename;
-    b_fs::path FFEA_script_path, FFEA_script_basename;
+    fs::path FFEA_script_path, FFEA_script_basename;
     string trajectory_out_fname;
     string kinetics_out_fname;
     string measurement_out_fname;

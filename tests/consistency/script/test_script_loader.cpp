@@ -25,11 +25,11 @@
 #include <sstream>
 #include "FFEA_input_reader.h"
 #include "SimulationParams.h"
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 int main (void)
 {
-	boost::filesystem::path path( boost::filesystem::current_path() );
+	std::filesystem::path path( std::filesystem::current_path() );
 	string file_to_open = path.string();
 	file_to_open += string("/2r5u_8ang.ffea");
 	// const int MAX_BUF_SIZE = 255;
