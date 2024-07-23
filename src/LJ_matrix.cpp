@@ -134,9 +134,9 @@ int SSINT_matrix::init_ssint(string ssint_params_fname, string ssint_type, scala
 
             // First parameter is an energy one, second is a distance one, third is a curvature one. This may need further generalisation
             if (bufvec2.size() > 3)
-                FFEA_ERROR_MESSG("For SSINT_params set %d %d, currently unable to have more than 3 params. You specified %d\n", i, j, bufvec2.size());
+                FFEA_ERROR_MESSG("For SSINT_params set %d %d, currently unable to have more than 3 params. You specified %zu\n", i, j, bufvec2.size());
             if (bufvec2.size() < 2)
-                FFEA_ERROR_MESSG("For SSINT_params set %d %d, currently must have at least 2 params (Emin, Rmin). You specified %d\n", i, j, bufvec2.size());
+                FFEA_ERROR_MESSG("For SSINT_params set %d %d, currently must have at least 2 params (Emin, Rmin). You specified %zu\n", i, j, bufvec2.size());
 
             for(count = 0; count < bufvec2.size(); count++)
                 params[LJI(i, j)][head[count]] = atof(bufvec2.at(count).c_str());

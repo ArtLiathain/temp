@@ -576,7 +576,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
     if (params.pbc_rod == 1)
     {
         for (int i = 0; i < params.num_rods; i++)
-            rod_box_length_check(rod_array[i], {box_dim.x, box_dim.y, box_dim.z});
+            rod_box_length_check(rod_array[i], {(float)box_dim.x, (float)box_dim.y, (float)box_dim.z});
     }
 
     // Now everything has been moved into boxes etc, save all initial positions
@@ -2290,7 +2290,7 @@ int World::run()
         if (params.pbc_rod == 1)
         {
             for (int i = 0; i < params.num_rods; i++)
-                rod_pbc_wrap(rod_array[i], {box_dim.x, box_dim.y, box_dim.z});
+                rod_pbc_wrap(rod_array[i], {(float)box_dim.x, (float)box_dim.y, (float)box_dim.z});
         }
 
 #ifdef FFEA_PARALLEL_FUTURE
@@ -4506,7 +4506,7 @@ void World::update_rod_steric_nbr_lists(rod::Rod *rod_a, rod::Rod *rod_b)
                 rod_a->steric_nbrs.at(elem_a),
                 rod_b->steric_nbrs.at(elem_b),
                 params.pbc_rod,
-                {box_dim.x, box_dim.y, box_dim.z});
+                {(float)box_dim.x, (float)box_dim.y, (float)box_dim.z});
         }
     }
 }
@@ -4555,7 +4555,7 @@ void World::update_rod_vdw_nbr_lists(rod::Rod *rod_a, rod::Rod *rod_b, SSINT_mat
                 rod_a->vdw_nbrs.at(elem_a),
                 rod_b->vdw_nbrs.at(elem_b),
                 params.pbc_rod,
-                {box_dim.x, box_dim.y, box_dim.z},
+                {(float)box_dim.x, (float)box_dim.y, (float)box_dim.z},
                 params.ssint_cutoff,
                 pmap["Emin"],
                 pmap["Rmin"]);

@@ -624,7 +624,7 @@ int Blob::check_inversion() {
 	if(invEls.size() != 0) {
 		printf("\n");
 		FFEA_error_text();
-		printf("%d inverted elements: ", invEls.size());
+		printf("%zu inverted elements: ", invEls.size());
 		for(n = 0; n < invEls.size(); ++n) {
 	                printf("%d ", invEls.at(n));
 		}

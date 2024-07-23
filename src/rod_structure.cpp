@@ -809,12 +809,13 @@ namespace rod
                 int vec_size = line_vec_float.size();
 
                 /** Check we're not going to overflow and ruin someone's life when we write into the array*/
+                // Unclear if the unsigned cast is here for a reason
                 int check[5] = {
-                    (unsigned)length,
-                    (unsigned)length + (length / 3),
-                    (unsigned)2 * length,
-                    (unsigned)length / 3,
-                    (unsigned)num_vdw_sites * 3
+                    (int)(unsigned)length,
+                    (int)(unsigned)length + (length / 3),
+                    (int)(unsigned)2 * length,
+                    (int)(unsigned)length / 3,
+                    (int)(unsigned)num_vdw_sites * 3
                 };
                 bool result = (check[0] == vec_size ||
                     check[1] == vec_size ||
