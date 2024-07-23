@@ -230,7 +230,7 @@ else(USE_BOOST_INTERNAL)
    set (Boost_NO_BOOST_CMAKE ON)
    set (Boost_USE_STATIC_LIBS ON)
    # Check version:
-   find_package( Boost 1.54.0 REQUIRED COMPONENTS program_options system  )
+   find_package( Boost 1.54.0 REQUIRED COMPONENTS program_options )
    if (NOT Boost_FOUND)
      mymessage(FATAL_ERROR "You could provide valid paths through either:
       -- BOOST_ROOT or
