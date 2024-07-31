@@ -21,22 +21,26 @@
 #  the research papers on the package.
 #
 
+# Boost+CMake info: https://github.com/boostorg/cmake
 
-set(EIGEN_INSTALL_DIR ${EIGEN3_HOME})
+set(BOOST_INCLUDE_LIBRARIES "program_options;math;algorithm")
+set(BOOST_ENABLE_CMAKE ON)
 
-include(ExternalProject)
-# Just get Eigen, and forget configuring and installing the package. 
-#   On some cases it was looking for Boost, causing trouble if finding an old version.   
-		    # CONFIGURE_COMMAND ${CMAKE_COMMAND} ../getEigen -DCMAKE_INSTALL_PREFIX=${EIGEN_INSTALL_DIR} 
-		    # INSTALL_COMMAND make install 
-ExternalProject_Add(getEigen
-                    URL https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz
-                    URL_HASH SHA256=d56fbad95abf993f8af608484729e3d87ef611dd85b3380a8bad1d5cbc373a57
-                    BUILD_IN_SOURCE 0
-		    CONFIGURE_COMMAND ""
-                    BUILD_COMMAND "" 
-		    INSTALL_COMMAND ""
-                   )
+include(FetchContent)
+set(BOOST_DOWNLOAD_VERSION "boost-1.85.0")
+FetchContent_Declare(
+    Boost
+    URL https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0-cmake.tar.gz
+    EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(Boost)
+# Mark some CACHE vars as advanced for a cleaner CMake GUI
+mark_as_advanced(FETCHCONTENT_QUIET)
+mark_as_advanced(FETCHCONTENT_BASE_DIR)
+mark_as_advanced(FETCHCONTENT_FULLY_DISCONNECTED)
+mark_as_advanced(FETCHCONTENT_UPDATES_DISCONNECTED) 
+mark_as_advanced(FETCHCONTENT_SOURCE_DIR_BOOST)
+mark_as_advanced(FETCHCONTENT_UPDATES_DISCONNECTED_BOOST)
 
-#set(EIGEN3_INCLUDE_DIR ${EIGEN3_HOME}/include/eigen3)
-set(EIGEN3_INCLUDE_DIR ${CMAKE_BINARY_DIR}/getEigen-prefix/src/getEigen)
+#find_package(Boost REQUIRED COMPONENTS PATHS "${CMAKE_BUILD_DIRECTORY}/_deps")
+
