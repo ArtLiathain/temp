@@ -20,3 +20,5 @@ Testing/
 .vscode
 ffea.code-workspace
 *FFEA_meta.json
+# Default CMake insource build path
+build/
