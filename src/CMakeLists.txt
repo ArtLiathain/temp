@@ -270,7 +270,7 @@ if (GIT_FOUND)
          ERROR_VARIABLE PACKAGE_BRANCH_ERROR)
 
     if (NOT "${PACKAGE_COMMIT}" STREQUAL "${PACKAGE_DATE}")
-         add_definitions(-DUSE_CMAKECONF)
+          target_compile_definitions(ffea_lib PUBLIC USE_CMAKECONF)
          set(VERSION_CMAKECONF "TRUE")
          string(STRIP ${PACKAGE_BRANCH} PACKAGE_BRANCH)
     endif (NOT "${PACKAGE_COMMIT}" STREQUAL "${PACKAGE_DATE}")
@@ -287,22 +287,31 @@ include_directories(${PROJECT_BINARY_DIR}/include)
 if (USE_OPENMP)
     find_package(OpenMP)
     if (OPENMP_FOUND)
-      add_definitions(-DUSE_OPENMP)
+        if (CMAKE_GENERATOR MATCHES "Visual Studio")
+            if (MSVC_TOOLSET_VERSION GREATER_EQUAL 142) 
+                # Visual Studio 2019+ requires experimental flag for OMP SIMD support
+                set_property(TARGET OpenMP::OpenMP_CXX PROPERTY INTERFACE_COMPILE_OPTIONS "-openmp:experimental")
+                # CMake 3.30 alt: set(OpenMP_RUNTIME_MSVC "experimental")
+            else ()
+                unset(OPENMP_FOUND)
+                message(FATAL_ERROR "Visual Studio earlier than 2019 does not support required OpenMP features")
+            endif ()
+        endif()
+    else()
+        message(FATAL_ERROR "MPI C++ Support was not found!")
     endif()
 endif()
-include(${CMAKE_ROOT}/Modules/FindOpenMP.cmake)
 if (OPENMP_FOUND)
+    target_compile_definitions(ffea_lib PUBLIC USE_OPENMP)
     target_link_libraries(ffea_lib PUBLIC OpenMP::OpenMP_CXX)
-else(OPENMP_FOUND)
-    message(FATAL_ERROR "MPI C++ Support was not found!")
-endif(OPENMP_FOUND)
+endif()
 
 
 # Parallel futures
 # Note, this should now be widely supported can it be made mandatory?
 if (USE_FUTURE)
     target_compile_definitions(ffea_lib FFEA_PARALLEL_FUTURE)
-endif(USE_FUTURE)
+endif()
 
 
 # Math

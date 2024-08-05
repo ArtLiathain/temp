@@ -75,7 +75,8 @@ int SSINT_matrix::init_steric() {
 int SSINT_matrix::init_ssint(string ssint_params_fname, string ssint_type, scalar ssint_cutoff) {
 
     int count, MAX_NUM_VARS = 3;
-    string line, aset, head[MAX_NUM_VARS];
+    string line, aset;
+    vector<string> head(MAX_NUM_VARS);
     vector<string> bufvec;
     vector<string> bufvec2;
     ifstream in (ssint_params_fname);

@@ -29,7 +29,6 @@
 #include <cstring>
 #include <string>
 #include <time.h>
-#include <unistd.h>
 #include <iostream>
 #include <fstream>
 #include <vector>

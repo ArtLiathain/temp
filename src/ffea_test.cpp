@@ -234,7 +234,7 @@ int ffea_test::connection_test()
     float material_axis_rotation_angle = std::acos(dotprod);
     std::cout << "Angle between = " << material_axis_rotation_angle << "\n";
 
-    if ((material_axis_rotation_angle > rotation_angle - 0.03) and
+    if ((material_axis_rotation_angle > rotation_angle - 0.03) &&
         (material_axis_rotation_angle < rotation_angle + 0.03))
     {
         // todo: make it so that the rotation is in the axis of the attachment face,
@@ -281,7 +281,7 @@ int ffea_test::arbitrary_equilibrium_twist()
     //    rod::print_array("mim1_equil_rotated",mim1_equil_rotated, 3);
     //    std::cout << "Twist energy = " << twist_energy << "\n";
 
-    if ((twist_energy > reference_energy - 0.01) and
+    if ((twist_energy > reference_energy - 0.01) &&
         (twist_energy < reference_energy + 0.01))
     {
         std::cout << "It's all gravy. \n";
@@ -1644,7 +1644,7 @@ int ffea_test::line_connecting_rod_elements()
         }
         vec3d(n) { delta_a[n] = c_a[n] - c_a_answer[n]; }
         vec3d(n) { delta_b[n] = c_b[n] - c_b_answer[n]; }
-        if (rod::absolute(delta_a) < 0.01 and rod::absolute(delta_b) < 0.01)
+        if (rod::absolute(delta_a) < 0.01 && rod::absolute(delta_b) < 0.01)
         {
             std::cout << "Case " << i << " passed!" << std::endl;
             pass_count++;
@@ -1804,7 +1804,7 @@ int ffea_test::rod_steric_lj_potential()
         {
             u = rod::steric_energy_squared(steric_constant, r);
         }
-        else if (r < r_min and r >= 0)
+        else if (r < r_min && r >= 0)
         {
             u = rod::vdw_energy_interp(r, eps, 1 / r_min);
         }
@@ -1959,7 +1959,7 @@ int ffea_test::nearest_image_pbc()
     for (auto in : input)
     {
         std::cout << "Input " << i << " / " << input.size() << "\n";
-        if (not nimg_test(in.a, in.b, in.img))
+        if (!nimg_test(in.a, in.b, in.img))
             fail_count++;
         i++;
     }

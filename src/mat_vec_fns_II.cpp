@@ -515,7 +515,7 @@ template <class t_scalar, class brr3> bool safeLinePlaneIntersectionPoint(brr3 &
 template <class t_scalar,class brr3> bool lineFaceIntersectionPoint(brr3 (&ip), brr3 (&e1), brr3 (&e2), brr3 (&p1), brr3 (&p2), brr3 (&p3)){
 
   // look for the intersection point... if it exists 
-  if ( not safeLinePlaneIntersectionPoint<t_scalar,brr3>(ip, e1, e2, p1, p2, p3)) return false;
+  if ( !safeLinePlaneIntersectionPoint<t_scalar,brr3>(ip, e1, e2, p1, p2, p3)) return false;
 
   // and finally check whether this point ip belongs to the triangular face:
   if ( (isPointInFace<t_scalar,brr3>(ip, p1, p2, p3)) ) return true;

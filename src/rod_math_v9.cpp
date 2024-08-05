@@ -71,7 +71,7 @@ namespace rod
         {
             return true;
         }
-        if ((boost::math::isnan)(x) or isinf(x) or std::isnan(x) or std::isinf(x))
+        if ((boost::math::isnan)(x) || isinf(x) || std::isnan(x) || std::isinf(x))
         {
             rod_abort(message);
         }
@@ -92,7 +92,7 @@ namespace rod
         {
             // Boost is needed because copiling with -ffastmath will make
             // the others stop working!
-            if ((boost::math::isnan)(x[i]) or isinf(x[i]) or std::isnan(x[i]) or std::isinf(x[i]))
+            if ((boost::math::isnan)(x[i]) || isinf(x[i]) || std::isnan(x[i]) || std::isinf(x[i]))
             {
                 rod_abort(message);
                 abort();
@@ -1222,31 +1222,31 @@ namespace rod
     {
         // I've tried writing 'clever' versions of this
         // but ultimately it's clearer to just write the lookup table explicitly
-        if (start_cutoff == 0 and end_cutoff == 0)
+        if (start_cutoff == 0 && end_cutoff == 0)
         { //Somewhere in the middle of the rod
             update_m1_matrix(m[0], p[0], p_prime[0], m_prime[0]);
             update_m1_matrix(m[1], p[1], p_prime[1], m_prime[1]);
             update_m1_matrix(m[2], p[2], p_prime[2], m_prime[2]);
             update_m1_matrix(m[3], p[3], p_prime[3], m_prime[3]);
         }
-        else if (start_cutoff == 1 and end_cutoff == 0)
+        else if (start_cutoff == 1 && end_cutoff == 0)
         { // one node at the start is cut off
             update_m1_matrix(m[1], p[1], p_prime[1], m_prime[1]);
             update_m1_matrix(m[2], p[2], p_prime[2], m_prime[2]);
             update_m1_matrix(m[3], p[3], p_prime[3], m_prime[3]);
         }
-        else if (start_cutoff == 2 and end_cutoff == 0)
+        else if (start_cutoff == 2 && end_cutoff == 0)
         { // two at the start are cut off
             update_m1_matrix(m[2], p[2], p_prime[2], m_prime[2]);
             update_m1_matrix(m[3], p[3], p_prime[3], m_prime[3]);
         }
-        else if (start_cutoff == 0 and end_cutoff == 1)
+        else if (start_cutoff == 0 && end_cutoff == 1)
         { // one at the end is cut off
             update_m1_matrix(m[0], p[0], p_prime[0], m_prime[0]);
             update_m1_matrix(m[1], p[1], p_prime[1], m_prime[1]);
             update_m1_matrix(m[2], p[2], p_prime[2], m_prime[2]);
         }
-        else if (start_cutoff == 0 and end_cutoff == 2)
+        else if (start_cutoff == 0 && end_cutoff == 2)
         { // two at the end are cut off
             update_m1_matrix(m[0], p[0], p_prime[0], m_prime[0]);
             update_m1_matrix(m[1], p[1], p_prime[1], m_prime[1]);
@@ -1417,20 +1417,20 @@ namespace rod
         load_m(material, material_params, p_i_node_no);
 
         // Apply our perturbation in x, y or z (for numerical differentiation)
-        if (perturbation_dimension < 4 and perturbation_amount != 0)
+        if (perturbation_dimension < 4 && perturbation_amount != 0)
         { //e.g. if we're perturbing x, y, or z
             p[im1][perturbation_dimension] += perturbation_amount;
             p[i][perturbation_dimension] -= perturbation_amount;
         }
 
         // If we perturb our angle instead, we apply a rodrigues rotation.
-        if (perturbation_dimension == 4 and perturbation_amount != 0)
+        if (perturbation_dimension == 4 && perturbation_amount != 0)
         { // if we're perturbing the twist
             rodrigues_rotation(m[i], p[i], perturbation_amount, m[i]);
         }
 
         // If we've perturbed it in x, y, or z, we need to update m, and then adjust it to make sure it's perpendicular
-        if (perturbation_dimension < 4 and perturbation_amount != 0)
+        if (perturbation_dimension < 4 && perturbation_amount != 0)
         {
             update_m1_matrix_all(m, original_p, p, m, start_cutoff, end_cutoff);
         }
@@ -1452,7 +1452,7 @@ namespace rod
         float stretch_energy = 0;
         float twist_energy = 0;
 
-        if (start_cutoff == 0 and end_cutoff == 0)
+        if (start_cutoff == 0 && end_cutoff == 0)
         {
             bend_energy += get_bend_energy_mutual_parallel_transport(p[im2], p[im1], p_equil[im2], p_equil[im1], n[im2], m[im2], n_equil[im2], m_equil[im2], n[im1], m[im1], n_equil[im1], m_equil[im1], B_equil[im1], B_equil[im2]);
             bend_energy += get_bend_energy_mutual_parallel_transport(p[im1], p[i], p_equil[im1], p_equil[i], n[im1], m[im1], n_equil[im1], m_equil[im1], n[i], m[i], n_equil[i], m_equil[i], B_equil[i], B_equil[im1]);
@@ -1463,7 +1463,7 @@ namespace rod
             bend_energy += get_bend_energy_mutual_parallel_transport(p[i], p[ip1], p_equil[i], p_equil[ip1], n[i], m[i], n_equil[i], m_equil[i], n[ip1], m[ip1], n_equil[ip1], m_equil[ip1], B_equil[ip1], B_equil[i]);
             twist_energy += get_twist_energy(material[im1][1], m[im1], m[im2], m_equil[im1], m_equil[im2], p[im2], p[im1], p_equil[im2], p_equil[im1]);
         }
-        else if (start_cutoff == 1 and end_cutoff == 0)
+        else if (start_cutoff == 1 && end_cutoff == 0)
         {
             bend_energy += get_bend_energy_mutual_parallel_transport(p[im1], p[i], p_equil[im1], p_equil[i], n[im1], m[im1], n_equil[im1], m_equil[im1], n[i], m[i], n_equil[i], m_equil[i], B_equil[i], B_equil[im1]);
             stretch_energy += get_stretch_energy(material[im1][0], p[im1], p_equil[im1]);
@@ -1472,13 +1472,13 @@ namespace rod
             twist_energy += get_twist_energy(material[ip1][1], m[ip1], m[i], m_equil[ip1], m_equil[i], p[i], p[ip1], p_equil[i], p_equil[ip1]);
             bend_energy += get_bend_energy_mutual_parallel_transport(p[i], p[ip1], p_equil[i], p_equil[ip1], n[i], m[i], n_equil[i], m_equil[i], n[ip1], m[ip1], n_equil[ip1], m_equil[ip1], B_equil[ip1], B_equil[i]);
         }
-        else if (start_cutoff == 2 and end_cutoff == 0)
+        else if (start_cutoff == 2 && end_cutoff == 0)
         {
             stretch_energy += get_stretch_energy(material[i][0], p[i], p_equil[i]);
             twist_energy += get_twist_energy(material[ip1][1], m[ip1], m[i], m_equil[ip1], m_equil[i], p[i], p[ip1], p_equil[i], p_equil[ip1]);
             bend_energy += get_bend_energy_mutual_parallel_transport(p[i], p[ip1], p_equil[i], p_equil[ip1], n[i], m[i], n_equil[i], m_equil[i], n[ip1], m[ip1], n_equil[ip1], m_equil[ip1], B_equil[ip1], B_equil[i]);
         }
-        else if (start_cutoff == 0 and end_cutoff == 1)
+        else if (start_cutoff == 0 && end_cutoff == 1)
         {
             bend_energy += get_bend_energy_mutual_parallel_transport(p[im2], p[im1], p_equil[im2], p_equil[im1], n[im2], m[im2], n_equil[im2], m_equil[im2], n[im1], m[im1], n_equil[im1], m_equil[im1], B_equil[im1], B_equil[im2]);
             bend_energy += get_bend_energy_mutual_parallel_transport(p[im1], p[i], p_equil[im1], p_equil[i], n[im1], m[im1], n_equil[im1], m_equil[im1], n[i], m[i], n_equil[i], m_equil[i], B_equil[i], B_equil[im1]);
@@ -1487,7 +1487,7 @@ namespace rod
             stretch_energy += get_stretch_energy(material[i][0], p[i], p_equil[i]);
             twist_energy += get_twist_energy(material[im1][1], m[im1], m[im2], m_equil[im1], m_equil[im2], p[im2], p[im1], p_equil[im2], p_equil[im1]);
         }
-        else if (start_cutoff == 0 and end_cutoff == 2)
+        else if (start_cutoff == 0 && end_cutoff == 2)
         {
             bend_energy += get_bend_energy_mutual_parallel_transport(p[im2], p[im1], p_equil[im2], p_equil[im1], n[im2], m[im2], n_equil[im2], m_equil[im2], n[im1], m[im1], n_equil[im1], m_equil[im1], B_equil[im1], B_equil[im2]);
             stretch_energy += get_stretch_energy(material[im1][0], p[im1], p_equil[im1]);

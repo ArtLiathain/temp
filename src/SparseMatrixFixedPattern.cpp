@@ -23,6 +23,8 @@
 
 #include "SparseMatrixFixedPattern.h"
 
+#include <vector>
+
 SparseMatrixFixedPattern::SparseMatrixFixedPattern() {
     num_rows = 0;
     num_nonzero_elements = 0;
@@ -150,8 +152,8 @@ void SparseMatrixFixedPattern::apply(vector3 *in, vector3 *result) {
     int i, j;
 
     // To get rid of conditionals, define an array 'num_rows' long, and copy into result at end
-    scalar work_in[num_rows];
-    scalar work_result[num_rows];
+    vector<scalar> work_in(num_rows);
+    vector<scalar> work_result(num_rows);
 
 #ifdef FFEA_PARALLEL_WITHIN_BLOB
     #pragma omp parallel default(none) private(i, j) shared(result, work_result, in, work_in)
@@ -228,7 +230,7 @@ void SparseMatrixFixedPattern::block_apply(vector3 **in, vector3 **result) {
 /* Designed to apply sparse matrix (kinetic map) to list of node positions for conformation changes */
 void SparseMatrixFixedPattern::block_apply(vector3 **in) {
     int i, j;
-    vector3 result[num_rows];
+    vector<vector3> result(num_rows);
 
     for(i = 0; i < num_rows; ++i) {
         result[i].x = 0;

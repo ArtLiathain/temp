@@ -79,7 +79,7 @@ int NoMassCGSolver::init(int num_nodes, int num_elements, mesh_node *node, tetra
     // if it is, then only a 1 on the diagonal corresponding to that node should
     // be placed (no off diagonal), effectively taking this node out of the equation
     // and therefore meaning the force on it should always be zero.
-    int is_pinned[num_nodes];
+    vector<int> is_pinned(num_nodes);
     for (i = 0; i < num_nodes; i++) {
         is_pinned[i] = 0;
     }

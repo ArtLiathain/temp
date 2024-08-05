@@ -24,9 +24,9 @@
 #ifndef SPARSESUBSTITUTIONSOLVER_H_INCLUDED
 #define SPARSESUBSTITUTIONSOLVER_H_INCLUDED
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
 
 #include "FFEA_return_codes.h"
 #include "mat_vec_types.h"

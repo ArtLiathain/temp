@@ -223,7 +223,7 @@ int main(int argc, char *argv[])
 
                 // Get index as string
                 cin >> buf;
-                if(buf.compare("q") == 0 or buf.compare("Q") == 0 or buf.compare("") == 0) {
+                if(buf.compare("q") == 0 || buf.compare("Q") == 0 || buf.compare("") == 0) {
                     cout << endl << "\tThat's all the blobs!" << endl;
                     break;
                 }

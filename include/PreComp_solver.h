@@ -29,7 +29,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include <boost/algorithm/string.hpp>
 #include <algorithm>
 

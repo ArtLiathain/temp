@@ -24,7 +24,7 @@
 #ifndef VDW_SOLVER_H_INCLUDED
 #define VDW_SOLVER_H_INCLUDED
 
-#include <math.h>
+#include <cmath>
 
 #include "FFEA_return_codes.h"
 #include "NearestNeighbourLinkedListCube.h"

@@ -24,7 +24,7 @@
 #ifndef GAUSSIANQUADRATURE_1D_H_INCLUDED
 #define GAUSSIANQUADRATURE_1D_H_INCLUDED
 
-#include <math.h>
+#include <cmath>
 #include "mat_vec_types.h"
 
 typedef struct {

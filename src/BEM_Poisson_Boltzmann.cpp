@@ -27,6 +27,7 @@
  *	Email: pyrar@leeds.ac.uk
  */
 
+#define _USE_MATH_DEFINES
 #include <cmath>
 
 #include "FFEA_return_codes.h"

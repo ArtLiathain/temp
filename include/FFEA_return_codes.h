@@ -49,7 +49,7 @@
 #define FFEA_UNBINDING_EVENT		2
 #define FFEA_IDENTITY_EVENT		3
 
-#include <stdio.h>
+#include <cstdio>
 
 /** Prints "ERROR: " to stderr in red text */ 
 void FFEA_error_text();

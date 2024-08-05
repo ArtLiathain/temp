@@ -291,9 +291,9 @@ bool VdW_solver::consider_interaction(Face *f_i, int l_index_i, int motion_state
 
     bool interaction_needed = false;
     if (l_index_i < l_j->index) {
-        if ((inc_self_ssint == 1) or ( (inc_self_ssint == 0 ) and (f_i->daddy_blob != l_j->obj->daddy_blob))) {
+        if ((inc_self_ssint == 1) || ( (inc_self_ssint == 0 ) && (f_i->daddy_blob != l_j->obj->daddy_blob))) {
 
-            if((working_w_static_blobs == false) || (motion_state_i == FFEA_BLOB_IS_DYNAMIC or l_j->obj->daddy_blob->get_motion_state() == FFEA_BLOB_IS_DYNAMIC)) {
+            if((working_w_static_blobs == false) || (motion_state_i == FFEA_BLOB_IS_DYNAMIC || l_j->obj->daddy_blob->get_motion_state() == FFEA_BLOB_IS_DYNAMIC)) {
                 interaction_needed = true;
             }
         }

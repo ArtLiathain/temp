@@ -57,7 +57,7 @@ void get_tri_norm(float node0[3], float node1[3], float node2[3], OUT float tri_
 /**
  For an array of 9 tet_nodes (defined in  object defined in mesh_node.cpp/mesh_node.h) populate a 1-D array with the 3x3 Jacobian of the shape functions. 
 */
-void get_jacobian(mesh_node **tet_nodes, OUT float J[0]){
+void get_jacobian(mesh_node **tet_nodes, OUT float J[9]){
     J[0] = tet_nodes[1]->pos[0] - tet_nodes[0]->pos[0];
     J[1] = tet_nodes[1]->pos[1] - tet_nodes[0]->pos[1];
     J[2] = tet_nodes[1]->pos[2] - tet_nodes[0]->pos[2];
@@ -175,7 +175,7 @@ void transpose_3x3(float in[9], OUT float transposed[9]){
  Where \f$ \mathbf{F} \f$ is the gradient deformation matrix, \f$ \mathbf{J'} \f$ is the Jacobian of the new deformed tetrahedron, and \f$ \mathbf{J} \f$ is the Jacobian of the undeformed one.
  Note: this is mostly the same as the one in tetra_element_linear.cpp, but that one is a member function that operates on member variables of tetra_element_linear, whereas this one is a pure function (and uses the same floats and 1-d arrays as the rest of the rod stuff).
 */
-void get_gradient_deformation(float J_inv_0[0], mesh_node**nodes_curr, OUT float transposed_gradient_deformation_3x3[9]){
+void get_gradient_deformation(float J_inv_0[9], mesh_node**nodes_curr, OUT float transposed_gradient_deformation_3x3[9]){
     if(dbg_print){std::cout << " Gradient deformation is occuring.\n";}
     if(dbg_print){std::cout << "  Getting jacobian...\n";}
     //float J_before[9];
@@ -568,7 +568,7 @@ bool points_out_of_tet(float node1[3], float node2[3], float node3[3], float nod
     vec3d(n){tet_centroid[n] /= 4.0;}
     float path_to_centroid[3];
     vec3d(n){path_to_centroid[n] = attachment_node[n] - tet_centroid[n];}
-    float dotprod;
+    float dotprod = 0;
     vec3d(n){dotprod += attachment_element[n] * path_to_centroid[n];}
     bool points_out = dotprod<0;
     return points_out;
@@ -1059,7 +1059,7 @@ void Rod_blob_interface::reorientate_connection(float attachment_element_orig[3]
 void Rod_blob_interface::position_rod_from_blob(bool use_equil){ // default false
     
     // create a copy of current_r
-    float current_r_rotated[this->connected_rod->length];
+    vector<float> current_r_rotated(this->connected_rod->length);
     for (int i=0; i < this->connected_rod->length; i++){
         if (use_equil == false){ current_r_rotated[i] = this->connected_rod->current_r[i]; }
         else{ current_r_rotated[i] = this->connected_rod->equil_r[i]; }

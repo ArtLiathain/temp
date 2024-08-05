@@ -32,7 +32,7 @@
 
 #include <iostream>
 #include <omp.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "FFEA_return_codes.h"
 #include "FFEA_user_info.h"

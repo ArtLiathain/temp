@@ -24,9 +24,9 @@
 #include "FFEA_return_codes.h"
 
 void FFEA_error_text() {
-    printf("\e[31mERROR: \e[m");
+    printf("\x1b[31mERROR: \x1b[m");
 }
 
 void FFEA_caution_text() {
-    printf("\e[33mCAUTION: \e[m");
+    printf("\x1b[33mCAUTION: \x1b[m");
 }

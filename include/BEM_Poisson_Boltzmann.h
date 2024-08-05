@@ -30,7 +30,7 @@
 #ifndef BEM_POISSON_BOLTZMANN_H_INCLUDED
 #define BEM_POISSON_BOLTZMANN_H_INCLUDED
 
-#include <math.h>
+#include <cmath>
 
 #include "FFEA_return_codes.h"
 #include "NearestNeighbourLinkedListCube.h"

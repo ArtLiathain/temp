@@ -45,7 +45,7 @@ namespace rod {
 void get_tri_norm(float node0[3], float node1[3], float node2[3], OUT float tri_norm[3]);
 void get_jacobian(mesh_node **tet_nodes, OUT float J[9]);
 void float_3x3_invert(float m[9], OUT float m_inv[9]);
-void get_gradient_deformation(float J_inv_0[0], mesh_node**nodes_curr, OUT float gradient_deformation_3x3[9]);
+void get_gradient_deformation(float J_inv_0[9], mesh_node**nodes_curr, OUT float gradient_deformation_3x3[9]);
 void QR_decompose_gram_schmidt(float matrix_3x3[9], OUT float Q[9], float R[9]);
 void construct_euler_rotation_matrix(float a, float b, float g, float rotmat[9]);
 void rotate_tet(float rotmat[9], mesh_node **nodes, OUT mesh_node **rotated_nodes);

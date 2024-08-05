@@ -779,7 +779,7 @@ void Blob::translate_linear(vector3 *vec) {
 
     // Get a mapping from all node indices to just linear node indices
     int num_linear_nodes = get_num_linear_nodes();
-    int map[num_linear_nodes];
+    vector<int> map(num_linear_nodes);
     int i, j;
     j = 0;
     for(i = 0; i < num_nodes; ++i) {
@@ -1696,7 +1696,7 @@ int Blob::build_linear_node_elasticity_matrix(Eigen::SparseMatrix<scalar> *A) {
 
     // Firstly, get a mapping from all node indices to just linear node indices
     // int num_linear_nodes = get_num_linear_nodes();
-    int map[num_nodes];
+    vector<int> map(num_nodes);
     j = 0;
     for(i = 0; i < num_nodes; ++i) {
         if(node[i].am_I_linear()) {
@@ -1776,7 +1776,7 @@ int Blob::build_linear_node_viscosity_matrix(Eigen::SparseMatrix<scalar> *K) {
     vector<Eigen::Triplet<scalar> > components;
 
     // Firstly, get a mapping from all node indices to just linear node indices
-    int map[num_nodes];
+    vector<int> map(num_nodes);
     int offset = 0;
     for(int i = 0; i < num_nodes; ++i) {
         if(node[i].am_I_linear()) {
@@ -1862,7 +1862,7 @@ int Blob::build_linear_node_mass_matrix(Eigen::SparseMatrix<scalar> *M) {
 
     // Firstly, get a mapping from all node indices to just linear node indices
 
-    int map[num_nodes];
+    vector<int> map(num_nodes);
     int offset = 0;
     for(i = 0; i < num_nodes; ++i) {
 
@@ -1933,7 +1933,7 @@ int Blob::build_linear_node_rp_diffusion_matrix(Eigen_MatrixX *D) {
     Eigen_Vector3 sep;
 
     // Firstly, get a mapping from all node indices to just linear node indices
-    int map[num_nodes];
+    vector<int> map(num_nodes);
     int offset = 0;
     for(i = 0; i < num_nodes; ++i) {
         if(node[i].am_I_linear()) {
@@ -3258,7 +3258,7 @@ int Blob::load_ctforces(string ctforces_fname) {
             FFEA_ERROR_MESSG("Invalid rotational force: %s, in line read: %s\n", type.substr(0).c_str(), my_lines[i].c_str());
             return FFEA_ERROR;
         }
-        if ((type.compare(1,1,"f")) and (type.compare(1,1,"t"))) { // check and store type force or torque
+        if ((type.compare(1,1,"f")) && (type.compare(1,1,"t"))) { // check and store type force or torque
             FFEA_ERROR_MESSG("Invalid rotational force type: %s, in line read: %s\n", type.substr(1).c_str(), my_lines[i].c_str());
             return FFEA_ERROR;
         }
@@ -3541,7 +3541,7 @@ int Blob::load_binding_sites() {
     cout << "\t\tReading in Binding Sites file: " << s_binding_filename << endl;
 
     // Check if correct file
-    int MAX_BUF_SIZE = 255;
+    const int MAX_BUF_SIZE = 255;
     char buf[MAX_BUF_SIZE];
     string buf_string;
     vector<string> string_vec;

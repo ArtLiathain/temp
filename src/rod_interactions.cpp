@@ -381,7 +381,7 @@ void set_steric_nbrs(int rod_id_a, int rod_id_b, int elem_id_a,
             printf("  |c_ab| : %.3e\n", rod::absolute(c_ab));
         }
 
-        if (rod::absolute(c_ab) > 1e-5 and rod::absolute(c_ab) < radius_sum)
+        if (rod::absolute(c_ab) > 1e-5 && rod::absolute(c_ab) < radius_sum)
         {
             if (rod::dbg_print)
             {
@@ -424,7 +424,7 @@ void set_steric_nbrs(int rod_id_a, int rod_id_b, int elem_id_a,
             throw std::runtime_error("Rod elements have fully overlapped.");
         }
     }
-    else if (rod::dbg_print and rod::absolute(mid_ab) >= cutoff)
+    else if (rod::dbg_print && rod::absolute(mid_ab) >= cutoff)
     {
         std::cout << "  ignored; outside steric regime\n\n";
     }
@@ -715,7 +715,7 @@ void set_vdw_nbrs(const VDWSite site_a, const VDWSite site_b, float p_a[3], floa
     }
 
     // Interactions are calculated based on surface-surface distance
-    if (mag - radius_sum > 0 and mag - radius_sum < vdw_cutoff)
+    if (mag - radius_sum > 0 && mag - radius_sum < vdw_cutoff)
     {
         InteractionData vdwDataA(
             site_a.rod_id,
@@ -749,11 +749,11 @@ void set_vdw_nbrs(const VDWSite site_a, const VDWSite site_b, float p_a[3], floa
             sigma);
         nbr_b.push_back(vdwDataB);
     }
-    else if (rod::dbg_print and mag - radius_sum >= vdw_cutoff)
+    else if (rod::dbg_print && mag - radius_sum >= vdw_cutoff)
     {
         std::cout << "  ignored; exceeded vdw cutoff\n";
     }
-    else if (rod::dbg_print and mag - radius_sum <= 0)
+    else if (rod::dbg_print && mag - radius_sum <= 0)
     {
         std::cout << "  ignored; within steric regime\n";
     }

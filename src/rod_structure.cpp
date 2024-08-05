@@ -516,7 +516,7 @@ namespace rod
             // A wee sanity check to stop your simulations from exploding horribly
             for (int i = 0; i < length; i++)
             {
-                if (std::abs(delta_r_x) >= 800000 or std::abs(delta_r_y) >= 800000 or std::abs(delta_r_z) >= 800000)
+                if (std::abs(delta_r_x) >= 800000 || std::abs(delta_r_y) >= 800000 || std::abs(delta_r_z) >= 800000)
                 {
                     std::cout << "node " << node_no << " frame " << frame_no << "\n";
                     std::cout << "delta_r: " << delta_r_x << ", " << delta_r_y << ", " << delta_r_z << "\n";
@@ -645,7 +645,7 @@ namespace rod
             {
                 assert(line == "format,ffea_rod");
             } /** Check that format is valid FFEA_rod */
-            if (n > 0 and line != rod_connections)
+            if (n > 0 && line != rod_connections)
             {
                 /** Extract data from lines and deposit it into object */
                 std::vector<std::string> line_vec;
@@ -822,7 +822,7 @@ namespace rod
                     check[2] == vec_size ||
                     check[3] == vec_size ||
                     check[4] == vec_size);
-                if (not result)
+                if (!result)
                 {
                     std::string msg = "Rod array length check failed during read.\n"
                         "vec_size :" + std::to_string(vec_size) + ")\n"
@@ -1024,8 +1024,8 @@ namespace rod
         }
 
         // initialise site position vector
-        for (int i; i < this->vdw_sites.size(); ++i)
-            vec3d(n) { this->vdw_site_pos.at((i * 3) + n) = this->vdw_sites.at(i).pos[n]; }
+        for (int j = 0; j < this->vdw_sites.size(); ++j)
+            vec3d(n) { this->vdw_site_pos.at((j * 3) + n) = this->vdw_sites.at(j).pos[n]; }
 
         printf("Read in %d VDW sites on rod %d\n", num_vdw_sites, this->rod_no);
 
@@ -1450,7 +1450,7 @@ namespace rod
         if (rod::dbg_print)
             std::cout << "Rod " << this->rod_no << ", elem " << elem_id << " has " << num_nbrs_on_elem << " steric neighbours";
 
-        for (int nbr_id; nbr_id < num_nbrs_on_elem; nbr_id++)
+        for (int nbr_id = 0; nbr_id < num_nbrs_on_elem; nbr_id++)
         {
             rod::InteractionData stericInt = get_interaction_data(elem_id, nbr_id, this->steric_nbrs);
 
@@ -1571,7 +1571,7 @@ namespace rod
         if (rod::dbg_print)
             std::cout << "Rod " << this->rod_no << ", elem " << elem_id << " has " << num_nbrs_on_elem << " vdw neighbours\n";
 
-        for (int nbr_id; nbr_id < num_nbrs_on_elem; nbr_id++)
+        for (int nbr_id = 0; nbr_id < num_nbrs_on_elem; nbr_id++)
         {
             rod::InteractionData VDWInt = get_interaction_data(elem_id, nbr_id, this->vdw_nbrs);
 
@@ -1585,7 +1585,7 @@ namespace rod
                 energy_sum += vdw_energy_6_12(r_mag_inv, VDWInt.epsilon, VDWInt.sigma);
                 force_mag = vdw_force_6_12(r_mag_inv, VDWInt.epsilon, VDWInt.sigma);
             }
-            else if (r_mag > 0 and r_mag < VDWInt.r_min)
+            else if (r_mag > 0 && r_mag < VDWInt.r_min)
             {
                 energy_sum += vdw_energy_interp(r_mag, VDWInt.epsilon, VDWInt.r_min_inv);
                 force_mag = vdw_force_interp(r_mag, VDWInt.epsilon, VDWInt.r_min_inv);

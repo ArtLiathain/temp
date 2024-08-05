@@ -24,7 +24,7 @@
 #ifndef NEARESTNEIGHBOURLINKEDLISTCUBE_H_INCLUDED
 #define NEARESTNEIGHBOURLINKEDLISTCUBE_H_INCLUDED
 
-#include <math.h>
+#include <cmath>
 #include "mat_vec_types.h"
 #include "mesh_node.h"
 #include "tetra_element_linear.h"

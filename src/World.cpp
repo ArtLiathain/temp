@@ -25,6 +25,8 @@
 #ifdef USE_MPI
 #include "mpi.h"
 #endif
+#include <filesystem>
+
 
 World::World()
 {
@@ -596,7 +598,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
     if (mode == 0)
     {
         // In any case, open the output checkpoint file for writing
-        if ((checkpoint_out = fopen(params.ocheckpoint_fname.c_str(), "w")) == NULL)
+        if ((checkpoint_out = fopen(params.ocheckpoint_fname.c_str(), "wb")) == NULL)
         {
             FFEA_FILE_ERROR_MESSG(params.ocheckpoint_fname.c_str());
         }
@@ -609,7 +611,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
         {
 
             // Open the trajectory output file for writing
-            if ((trajectory_out = fopen(params.trajectory_out_fname.c_str(), "w")) == NULL)
+            if ((trajectory_out = fopen(params.trajectory_out_fname.c_str(), "wb")) == NULL)
             {
                 FFEA_FILE_ERROR_MESSG(params.trajectory_out_fname.c_str())
             }
@@ -638,7 +640,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
             fprintf(trajectory_out, "*\n");
 
             // Open the measurement output file for writing
-            if ((measurement_out = fopen(params.measurement_out_fname.c_str(), "w")) == NULL)
+            if ((measurement_out = fopen(params.measurement_out_fname.c_str(), "wb")) == NULL)
             {
                 FFEA_FILE_ERROR_MESSG(params.measurement_out_fname.c_str())
             }
@@ -681,7 +683,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
             // HEADER FOR DETAILED MEASUREMENTS (if necessary)
             if (writeDetailed)
             {
-                detailed_meas_out = fopen(params.detailed_meas_out_fname.c_str(), "w");
+                detailed_meas_out = fopen(params.detailed_meas_out_fname.c_str(), "wb");
                 fprintf(detailed_meas_out, "FFEA Detailed Measurement File\n\nMeasurements:\n");
                 fprintf(detailed_meas_out, "%-14s", "Time");
                 for (i = 0; i < params.num_blobs; ++i)
@@ -725,7 +727,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
             // Open the beads_out file:
             if (params.trajbeads_fname_set == 1)
             {
-                if ((trajbeads_out = fopen(params.trajectory_beads_fname.c_str(), "w")) == NULL)
+                if ((trajbeads_out = fopen(params.trajectory_beads_fname.c_str(), "wb")) == NULL)
                 {
                     FFEA_FILE_ERROR_MESSG(params.trajectory_beads_fname.c_str())
                 }
@@ -734,7 +736,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
             // Open the kinetics output file for writing (if neccessary) and write initial stuff
             if (params.kinetics_out_fname_set == 1)
             {
-                if ((kinetics_out = fopen(params.kinetics_out_fname.c_str(), "w")) == NULL)
+                if ((kinetics_out = fopen(params.kinetics_out_fname.c_str(), "wb")) == NULL)
                 {
                     FFEA_FILE_ERROR_MESSG(params.kinetics_out_fname.c_str())
                 }
@@ -764,7 +766,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
             char c;
 
             printf("Restarting from trajectory file %s\n", params.trajectory_out_fname.c_str());
-            if ((trajectory_out = fopen(params.trajectory_out_fname.c_str(), "r")) == NULL)
+            if ((trajectory_out = fopen(params.trajectory_out_fname.c_str(), "rb")) == NULL)
             {
                 FFEA_FILE_ERROR_MESSG(params.trajectory_out_fname.c_str())
             }
@@ -781,8 +783,8 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
             }
 
             // Variable to store position of last asterisk in trajectory file (initialise it at end of file)
-            off_t last_asterisk_pos;
-            last_asterisk_pos = ftello(trajectory_out);
+            long last_asterisk_pos;
+            last_asterisk_pos = ftell(trajectory_out);
 
             int num_asterisks = 0;
             int num_asterisks_to_find = 3 + (frames_to_delete)*2 + 1; // 3 to get to top of last frame, then two for every subsequent frame. Final 1 to find ending conformations of last step
@@ -825,7 +827,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
             }
             else
             {
-                last_asterisk_pos = ftello(trajectory_out);
+                last_asterisk_pos = ftell(trajectory_out);
             }
 
             // Get the conformations for the last snapshot (or set them as 0 if we have only 1 frame)
@@ -839,7 +841,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
                     active_blob_array[i] = &blob_array[i][current_conf];
                 }
                 crap = fscanf(trajectory_out, "*\n");
-                last_asterisk_pos = ftello(trajectory_out);
+                last_asterisk_pos = ftell(trajectory_out);
             }
             else
             {
@@ -879,14 +881,16 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
             crap = fscanf(trajectory_out, "*\n");
 
             // Set truncation location
-            //   last_asterisk_pos = ftello(trajectory_out);
+            //   last_asterisk_pos = ftell(trajectory_out);
             step_initial = rstep;
             printf("...done. Simulation will commence from step %lld\n", step_initial);
             fclose(trajectory_out);
 
             // Truncate the trajectory file up to the point of the stored asterisk position, thereby deleting the last frame and erasing any half-written time steps that may occur after it
             printf("Truncating the trajectory file to the last asterisk...\n");
-            if (truncate(params.trajectory_out_fname.c_str(), last_asterisk_pos) != 0)
+            error_code ec1;
+            filesystem::resize_file(params.trajectory_out_fname, last_asterisk_pos, ec1);
+            if (ec1)
             {
                 FFEA_ERROR_MESSG("Error when trying to truncate trajectory file %s\n", params.trajectory_out_fname.c_str())
             }
@@ -897,7 +901,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
 
             // Global
 
-            if ((measurement_out = fopen(params.measurement_out_fname.c_str(), "r")) == NULL)
+            if ((measurement_out = fopen(params.measurement_out_fname.c_str(), "rb")) == NULL)
             {
                 FFEA_FILE_ERROR_MESSG(params.measurement_out_fname.c_str())
             }
@@ -907,7 +911,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
                 FFEA_ERROR_MESSG("Could not seek to end of file\n")
             }
 
-            last_asterisk_pos = ftello(measurement_out);
+            last_asterisk_pos = ftell(measurement_out);
 
             // Looking for newlines this time, as each measurement frame is a single line
             int num_newlines = 0;
@@ -926,11 +930,13 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
                 }
             }
 
-            last_asterisk_pos = ftello(measurement_out);
+            last_asterisk_pos = ftell(measurement_out);
 
             // Truncate the measurement file up to the point of the last newline
             printf("Truncating the measurement file to the appropriate line...\n");
-            if (truncate(params.measurement_out_fname.c_str(), last_asterisk_pos) != 0)
+            error_code ec2;
+            filesystem::resize_file(params.measurement_out_fname, last_asterisk_pos, ec2);
+            if (ec2)
             {
                 FFEA_ERROR_MESSG("Error when trying to truncate measurment file %s\n", params.measurement_out_fname.c_str())
             }
@@ -938,13 +944,13 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
             // Append a newline to the end of this truncated measurement file (to replace the one that may or may not have been there)
             //fprintf(measurement_out, "#==RESTART==\n");
 
-            last_asterisk_pos = ftello(measurement_out);
+            last_asterisk_pos = ftell(measurement_out);
 
             // Detailed
             if (writeDetailed)
             {
 
-                if ((detailed_meas_out = fopen(params.detailed_meas_out_fname.c_str(), "r")) == NULL)
+                if ((detailed_meas_out = fopen(params.detailed_meas_out_fname.c_str(), "rb")) == NULL)
                 {
                     FFEA_FILE_ERROR_MESSG(params.detailed_meas_out_fname.c_str())
                 }
@@ -954,7 +960,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
                     FFEA_ERROR_MESSG("Could not seek to end of file\n")
                 }
 
-                last_asterisk_pos = ftello(detailed_meas_out);
+                last_asterisk_pos = ftell(detailed_meas_out);
 
                 // Looking for newlines this time, as each measurement frame is a single line
                 num_newlines = 0;
@@ -973,11 +979,13 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
                     }
                 }
 
-                last_asterisk_pos = ftello(detailed_meas_out);
+                last_asterisk_pos = ftell(detailed_meas_out);
 
                 // Truncate the measurement file up to the point of the last newline
                 printf("Truncating the detailed measurement file to the appropriate line...\n");
-                if (truncate(params.detailed_meas_out_fname.c_str(), last_asterisk_pos) != 0)
+                error_code ec3;
+                filesystem::resize_file(params.detailed_meas_out_fname, last_asterisk_pos, ec3);
+                if (ec3)
                 {
                     FFEA_ERROR_MESSG("Error when trying to truncate measurment file %s\n", params.detailed_meas_out_fname.c_str())
                 }
@@ -985,11 +993,11 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
 
             // Open trajectory and measurment files for appending
             printf("Opening trajectory and measurement files for appending.\n");
-            if ((trajectory_out = fopen(params.trajectory_out_fname.c_str(), "a")) == NULL)
+            if ((trajectory_out = fopen(params.trajectory_out_fname.c_str(), "ab")) == NULL)
             {
                 FFEA_FILE_ERROR_MESSG(params.trajectory_out_fname.c_str())
             }
-            if ((measurement_out = fopen(params.measurement_out_fname.c_str(), "a")) == NULL)
+            if ((measurement_out = fopen(params.measurement_out_fname.c_str(), "ab")) == NULL)
             {
                 FFEA_FILE_ERROR_MESSG(params.measurement_out_fname.c_str())
             }
@@ -997,7 +1005,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
             // And the detailed meas file, maybe
             if (writeDetailed)
             {
-                if ((detailed_meas_out = fopen(params.detailed_meas_out_fname.c_str(), "a")) == NULL)
+                if ((detailed_meas_out = fopen(params.detailed_meas_out_fname.c_str(), "ab")) == NULL)
                 {
                     FFEA_FILE_ERROR_MESSG(params.detailed_meas_out_fname.c_str())
                 }
@@ -1006,7 +1014,7 @@ int World::init(string FFEA_script_filename, int frames_to_delete, int mode, boo
             // And kinetic file
             if (params.kinetics_out_fname_set == 1)
             {
-                if ((kinetics_out = fopen(params.kinetics_out_fname.c_str(), "a")) == NULL)
+                if ((kinetics_out = fopen(params.kinetics_out_fname.c_str(), "ab")) == NULL)
                 {
                     FFEA_FILE_ERROR_MESSG(params.kinetics_out_fname.c_str())
                 }
@@ -2101,7 +2109,7 @@ int World::run()
 
         // Zero the force across all blobs
 #ifdef USE_OPENMP
-#pragma omp parallel for default(none) shared(es_update, stderr, step) schedule(static)
+#pragma omp parallel for default(none) shared(es_update, step) schedule(static)
 #endif
         for (int i = 0; i < params.num_blobs; i++)
         {
@@ -2579,7 +2587,7 @@ int World::read_and_build_system(vector<string> script_vector)
 
     // Read the INTERACTIONS block:
     // Get interactions vector first, for later use
-    if ((params.calc_preComp == 1) or (params.calc_springs == 1) or (params.calc_ctforces == 1))
+    if ((params.calc_preComp == 1) || (params.calc_springs == 1) || (params.calc_ctforces == 1))
     {
         if (systemreader->extract_block("interactions", 0, script_vector, &interactions_vector) == FFEA_ERROR)
             return FFEA_ERROR;
@@ -3635,7 +3643,7 @@ int World::choose_new_kinetic_state(int blob_index, int *target)
     scalar switch_check;
 
     // Make some bins
-    scalar bin[params.num_states[blob_index]][2];
+    vector<scalar[2]> bin(params.num_states[blob_index]);
     scalar total = 0.0;
     for (i = 0; i < params.num_states[blob_index]; ++i)
     {
@@ -3669,7 +3677,7 @@ int World::load_kinetic_states(string states_fname, int blob_index)
 {
 
     int i, j, num_states, conf_index, from, to; //, site_index;
-    int MAX_BUF_SIZE = 255;
+    const int MAX_BUF_SIZE = 255;
     char buf[MAX_BUF_SIZE];
     string buf_string;
     vector<string> sline;
@@ -3827,7 +3835,7 @@ int World::load_kinetic_rates(string rates_fname, int blob_index)
     }
 
     // Open the file
-    fin = fopen(rates_fname.c_str(), "r");
+    fin = fopen(rates_fname.c_str(), "rb");
 
     // Get header stuff and check for errors
     crap = fgets(buf, 255, fin);
@@ -4093,7 +4101,7 @@ int World::load_springs(const char *fname)
     char line[max_line_size];
 
     // open the spring file
-    if ((in = fopen(fname, "r")) == NULL)
+    if ((in = fopen(fname, "rb")) == NULL)
     {
         FFEA_FILE_ERROR_MESSG(fname)
     }
@@ -4245,7 +4253,7 @@ rod::Rod_blob_interface *World::rod_blob_interface_from_block(vector<string> blo
         //if (tag_out[0] == "output" && coupling_parent){ current_rod->change_filename(tag_out[1]); }
 
         // parse coupling block
-        if (tag_out[0] == "coupling type" && coupling_parent && (tag_out[1] == "rod-to-blob" or tag_out[1] == "blob-to-rod"))
+        if (tag_out[0] == "coupling type" && coupling_parent && (tag_out[1] == "rod-to-blob" || tag_out[1] == "blob-to-rod"))
         {
             std::cout << "Coupling data parsing...";
             if (tag_out[1] == "rod-to-blob")
@@ -4821,8 +4829,8 @@ void World::write_eig_to_files(scalar *evals_ordered, scalar **evecs_ordered, in
 
     // Open the files and write the modes out
     FILE *valfout, *vecfout;
-    valfout = fopen(val_out_fname.c_str(), "w");
-    vecfout = fopen(vec_out_fname.c_str(), "w");
+    valfout = fopen(val_out_fname.c_str(), "wb");
+    vecfout = fopen(vec_out_fname.c_str(), "wb");
     for (int i = 0; i < 3 * num_nodes; ++i)
     {
         if (i < num_modes)
@@ -4852,11 +4860,11 @@ void World::make_trajectory_from_eigenvector(string traj_out_fname, int blob_ind
     scalar dx;
 
     // Convert weird eigen thing into a nice vector3 list
-    vector3 node_trans[active_blob_array[blob_index]->get_num_linear_nodes()];
+    vector<vector3> node_trans(active_blob_array[blob_index]->get_num_linear_nodes());
 
     // Open file
     FILE *fout;
-    fout = fopen(traj_out_fname.c_str(), "w");
+    fout = fopen(traj_out_fname.c_str(), "wb");
 
     // Header Stuff
     fprintf(fout, "FFEA_trajectory_file\n\nInitialisation:\nNumber of Blobs 1\nNumber of Conformations 1\nBlob 0:	Conformation 0 Nodes %d\n\n*\n", active_blob_array[blob_index]->get_num_nodes());
@@ -4896,7 +4904,7 @@ void World::make_trajectory_from_eigenvector(string traj_out_fname, int blob_ind
         }
 
         // Translate all the nodes
-        active_blob_array[blob_index]->translate_linear(node_trans);
+        active_blob_array[blob_index]->translate_linear(node_trans.data());
         fprintf(fout, "Blob 0, Conformation 0, step %d\n", i);
         active_blob_array[blob_index]->write_nodes_to_file(fout);
         fprintf(fout, "*\n");
@@ -4910,7 +4918,7 @@ void World::print_evecs_to_file(string fname, Eigen_MatrixX ev, int num_rows, in
 
     int i, j;
     FILE *fout;
-    fout = fopen(fname.c_str(), "w");
+    fout = fopen(fname.c_str(), "wb");
 
     // Skip the zero modes
     for (i = 6; i < num_modes + 6; ++i)
@@ -4935,7 +4943,7 @@ void World::print_evals_to_file(string fname, Eigen_VectorX ev, int num_modes, s
 
     int i;
     FILE *fout;
-    fout = fopen(fname.c_str(), "w");
+    fout = fopen(fname.c_str(), "wb");
 
     // Skip the zero modes
     for (i = 6; i < num_modes + 6; ++i)

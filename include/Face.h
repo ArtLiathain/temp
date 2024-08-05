@@ -24,7 +24,7 @@
 #ifndef FACE_H_INCLUDED
 #define FACE_H_INCLUDED
 
-#include <math.h>
+#include <cmath>
 
 #include "mesh_node.h"
 #include "tetra_element_linear.h"

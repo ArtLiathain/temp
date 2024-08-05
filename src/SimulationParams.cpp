@@ -887,7 +887,7 @@ int SimulationParams::validate(int sim_mode)
         FFEA_ERROR_MESSG("Required: 'calc_steric_rod', must be 0 (no) or 1 (yes).\n");
     }
 
-    if (flow_profile != "none" and flow_profile != "uniform" and flow_profile != "shear")
+    if (flow_profile != "none" && flow_profile != "uniform" && flow_profile != "shear")
     {
         FFEA_ERROR_MESSG("Required: 'flow_profile' must be set to 'none', 'uniform' or 'shear'.\n");
     }
@@ -1008,7 +1008,7 @@ int SimulationParams::validate(int sim_mode)
         FFEA_ERROR_MESSG("Required: 'calc_kinetics', must be 0 (no) or 1 (yes).\n");
     }
 
-    if (calc_steric == 1 or calc_ssint == 1 or calc_es == 1 or calc_preComp == 1)
+    if (calc_steric == 1 || calc_ssint == 1 || calc_es == 1 || calc_preComp == 1)
     {
         if (es_N_x < 1)
         {
