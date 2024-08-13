@@ -51,7 +51,7 @@ int main(){
         B,
         B);
         
-    if (computed_energy > mathematica_result - 0.00001 and computed_energy < mathematica_result + 0.00001){
+    if (computed_energy > mathematica_result - 0.00001 && computed_energy < mathematica_result + 0.00001){
         return 0;
     }
     else{

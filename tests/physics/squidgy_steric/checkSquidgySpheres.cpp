@@ -39,44 +39,44 @@ double getRotationAngle(Eigen::MatrixXd &m1, Eigen::MatrixXd &m2);
 
 FILE *set_up_trajfile(const char *traj_filename){
   
-   FILE *trj; 
-   char c;
-   if ((trj = fopen(traj_filename, "r")) == NULL) {
-      cout << "Failed to open: " << traj_filename << endl; 
-      return NULL; 
-   }
- 
-   while(c != '*') {
-     c = fgetc(trj);
-   }  
+    FILE *trj; 
+    char c;
+    if ((trj = fopen(traj_filename, "r")) == NULL) {
+        cout << "Failed to open: " << traj_filename << endl; 
+        return NULL; 
+    }
 
-   skipnlines(trj, 2); 
+    do {
+        c = fgetc(trj);
+    } while (c != '*');
 
-   return trj;
+    skipnlines(trj, 2); 
+
+    return trj;
 
 }
 
 int skipnlines(FILE *iFile, int n) {
 
-   int i=0;
-   char *ignore;
-   int len_crap = 256;
-   char crap[len_crap];
-   for (i=0; i<n; i++){
-     ignore = fgets(crap, len_crap, iFile);
-     //printf("crap: %s", crap); 
-   }
-   return 0;
+    int i=0;
+    char *ignore;
+    constexpr int len_crap = 256;
+    char crap[len_crap];
+    for (i=0; i<n; i++){
+        ignore = fgets(crap, len_crap, iFile);
+        // printf("crap: %s", crap); 
+    }
+    return 0;
 
 }
 
 void storeCoordsEigen(BlobLite &blob, Eigen::MatrixXd &coords){ 
     
-   for (int i=0; i<blob.num_nodes; i++){
-      coords(0,i) = blob.coord[3*i  ];
-      coords(1,i) = blob.coord[3*i+1];
-      coords(2,i) = blob.coord[3*i+2];
-   }
+    for (int i=0; i<blob.num_nodes; i++){
+        coords(0,i) = blob.coord[3*i  ];
+        coords(1,i) = blob.coord[3*i+1];
+        coords(2,i) = blob.coord[3*i+2];
+    }
  
 }
 

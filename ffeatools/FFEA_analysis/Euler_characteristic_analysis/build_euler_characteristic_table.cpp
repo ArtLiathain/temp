@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <vector>
 
 //    3 - 2
 //   /|  /|
@@ -90,8 +91,8 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
-	const int num_possibilities = pow(2, 8) + 1;
-	int euler_characteristic_lookup [num_possibilities];
+	int num_possibilities = pow(2, 8) + 1;
+    std::vector<int> euler_characteristic_lookup(num_possibilities);
 	for(int i = 0; i < num_possibilities; i++) {
 		int flags[8] = {(i & 1)>0, (i & 2)>0, (i & 4)>0, (i & 8)>0, (i & 16)>0, (i & 32)>0, (i & 64)>0, (i & 128)>0};
 		euler_characteristic_lookup[i] = calc_euler_number_x_4(flags);

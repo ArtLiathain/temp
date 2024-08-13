@@ -23,5 +23,5 @@
 
 set (JACOBIANROTATEDIR "${PROJECT_BINARY_DIR}/tests/rods/unit/jacobian_rotate/")
 file (COPY jacobian_rotate.ffeatest DESTINATION ${JACOBIANROTATEDIR})
-add_test(NAME jacobian_rotate COMMAND ${PROJECT_BINARY_DIR}/src/ffea jacobian_rotate.ffeatest)
+add_test(NAME jacobian_rotate COMMAND ffea jacobian_rotate.ffeatest)
 

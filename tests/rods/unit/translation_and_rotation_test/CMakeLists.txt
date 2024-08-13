@@ -23,16 +23,16 @@
 
 set (TESTROD "${PROJECT_BINARY_DIR}/tests/rods/unit/translation_and_rotation_test")
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
-
 add_executable(translation_and_rotation_test translation_and_rotation_test.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp
-               ${PROJECT_SOURCE_DIR}/src/RngStream.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_interactions.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_structure.cpp)
+               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp # Part of ffea target rather than ffea_lib
+               ${PROJECT_SOURCE_DIR}/src/rod_interactions.cpp # Part of ffea target rather than ffea_lib
+               ${PROJECT_SOURCE_DIR}/src/rod_structure.cpp # Part of ffea target rather than ffea_lib
+               #${PROJECT_SOURCE_DIR}/src/RngStream.cpp
+               )
+target_link_libraries(translation_and_rotation_test PRIVATE ffea_lib)
 
 file (COPY realistic_rod.rodtraj DESTINATION ${TESTROD})
 
 
 
-add_test(translation_and_rotation_test ${CMAKE_CURRENT_BINARY_DIR}/translation_and_rotation_test)
+add_test(NAME translation_and_rotation_test COMMAND translation_and_rotation_test)

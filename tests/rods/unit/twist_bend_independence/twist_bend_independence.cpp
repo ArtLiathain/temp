@@ -35,7 +35,7 @@ int main(){
         B_equil,
         B_equil);
 
-    if (twist > 0 and bend > -0.001 and bend < 0.001){
+    if (twist > 0 && bend > -0.001 && bend < 0.001){
         return 0;
     }
 

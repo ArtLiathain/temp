@@ -7,7 +7,7 @@ int main(){
     float rotated_mi[3];
     float theta = 1.570796327*2;
     rod::rodrigues_rotation(m_i, e_i, theta, rotated_mi);
-    if (rotated_mi[1] < -0.99 and rotated_mi[1] > -1.01 and rotated_mi[2] < 0.001 and rotated_mi[2] > -0.001){
+    if (rotated_mi[1] < -0.99 && rotated_mi[1] > -1.01 && rotated_mi[2] < 0.001 && rotated_mi[2] > -0.001){
         return 0;
     }
     return 1;

@@ -23,16 +23,14 @@
 
 set (TESTROD "${PROJECT_BINARY_DIR}/tests/rods/unit/twist_bend_independence_v2")
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
-
 add_executable(twist_bend_independence_v2 twist_bend_independence_v2.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp
-               ${PROJECT_SOURCE_DIR}/src/RngStream.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_structure.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_interactions.cpp)
+               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp # Part of ffea target rather than ffea_lib
+               ${PROJECT_SOURCE_DIR}/src/rod_interactions.cpp # Part of ffea target rather than ffea_lib
+               ${PROJECT_SOURCE_DIR}/src/rod_structure.cpp # Part of ffea target rather than ffea_lib
+               #${PROJECT_SOURCE_DIR}/src/RngStream.cpp
+               )
+target_link_libraries(twist_bend_independence_v2 PRIVATE ffea_lib)
 
 file (COPY twisted_bent_rod.rod DESTINATION ${TESTROD})
 
-
-
-add_test(twist_bend_independence_v2 ${CMAKE_CURRENT_BINARY_DIR}/twist_bend_independence_v2)
+add_test(NAME twist_bend_independence_v2 COMMAND twist_bend_independence_v2)

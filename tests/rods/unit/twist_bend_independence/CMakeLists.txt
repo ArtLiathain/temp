@@ -21,9 +21,9 @@
 #  the research papers on the package.
 #
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
-
 add_executable(twist_bend_independence twist_bend_independence.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp)
+               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp # Part of ffea target rather than ffea_lib
+               )
+target_link_libraries(twist_bend_independence PRIVATE ffea_lib)
 
-add_test(twist_bend_independence ${CMAKE_CURRENT_BINARY_DIR}/twist_bend_independence)
+add_test(NAME twist_bend_independence COMMAND twist_bend_independence)

@@ -90,13 +90,13 @@ float twist_energy_perturbation_test(
     std::cout << "orig p = " << p[i][x] << ", " << p[i][y] << ", " << p[i][z] << "\n";
     
     // Apply our perturbation in x, y or z (for numerical differentiation)
-    if (perturbation_dimension < 4 and perturbation_amount != 0){ //e.g. if we're perturbing x, y, or z
+    if (perturbation_dimension < 4 && perturbation_amount != 0){ //e.g. if we're perturbing x, y, or z
         p[im1][perturbation_dimension] += perturbation_amount;
         p[i][perturbation_dimension] -= perturbation_amount;
     }
     
     // If we perturb our angle instead, we apply a rodrigues rotation.
-    if(perturbation_dimension == 4 and perturbation_amount != 0){ // if we're perturbing the twist
+    if(perturbation_dimension == 4 && perturbation_amount != 0){ // if we're perturbing the twist
         rod::rodrigues_rotation(m[i], p[i], perturbation_amount, m[i]);
     }
     
@@ -110,7 +110,7 @@ float twist_energy_perturbation_test(
     //std::cout << "]\n";
     //
     //If we've perturbed it in x, y, or z, we need to update m, and then adjust it to make sure it's perpendicular
-    if (perturbation_dimension < 4 and perturbation_amount != 0){ 
+    if (perturbation_dimension < 4 && perturbation_amount != 0){ 
         rod::update_m1_matrix_all(m, original_p, p, m, start_cutoff, end_cutoff);
     }
     
@@ -164,23 +164,23 @@ float twist_energy_perturbation_test(
 //    return 0;
 //    std::cout << "start cutoff = " << start_cutoff << ", end cutoff = " << end_cutoff << "\n";
         
-    if (start_cutoff == 0 and end_cutoff == 0){
+    if (start_cutoff == 0 && end_cutoff == 0){
         twist_energy += rod::get_twist_energy(material[i][1], m[i], m[im1], m_equil[i], m_equil[im1], p[im1], p[i], p_equil[im1], p_equil[i]);
         twist_energy += rod::get_twist_energy(material[ip1][1], m[ip1], m[i], m_equil[ip1], m_equil[i], p[i], p[ip1], p_equil[i], p_equil[ip1]);
         twist_energy += rod::get_twist_energy(material[im1][1], m[im1], m[im2], m_equil[im1], m_equil[im2], p[im2], p[im1], p_equil[im2], p_equil[im1]);
     }
-    else if (start_cutoff == 1 and end_cutoff == 0){
+    else if (start_cutoff == 1 && end_cutoff == 0){
         twist_energy += rod::get_twist_energy(material[i][1], m[i], m[im1], m_equil[i], m_equil[im1], p[im1], p[i], p_equil[im1], p_equil[i]);
         twist_energy += rod::get_twist_energy(material[ip1][1], m[ip1], m[i], m_equil[ip1], m_equil[i], p[i], p[ip1], p_equil[i], p_equil[ip1]);
     }
-    else if (start_cutoff == 2 and end_cutoff == 0){
+    else if (start_cutoff == 2 && end_cutoff == 0){
         twist_energy += rod::get_twist_energy(material[ip1][1], m[ip1], m[i], m_equil[ip1], m_equil[i], p[i], p[ip1], p_equil[i], p_equil[ip1]);
     }
-    else if (start_cutoff == 0 and end_cutoff == 1){
+    else if (start_cutoff == 0 && end_cutoff == 1){
         twist_energy += rod::get_twist_energy(material[i][1], m[i], m[im1], m_equil[i], m_equil[im1], p[im1], p[i], p_equil[im1], p_equil[i]);
         twist_energy += rod::get_twist_energy(material[im1][1], m[im1], m[im2], m_equil[im1], m_equil[im2], p[im2], p[im1], p_equil[im2], p_equil[im1]);
     }    
-    else if (start_cutoff == 0 and end_cutoff == 2){
+    else if (start_cutoff == 0 && end_cutoff == 2){
         twist_energy += rod::get_twist_energy(material[im1][1], m[im1], m[im2], m_equil[im1], m_equil[im2], p[im2], p[im1], p_equil[im2], p_equil[im1]);
      }
     else{

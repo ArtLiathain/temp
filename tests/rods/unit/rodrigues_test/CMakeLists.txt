@@ -20,10 +20,9 @@
 #  To help us fund FFEA development, we humbly ask that you cite 
 #  the research papers on the package.
 #
-
-include_directories("${PROJECT_SOURCE_DIR}/include")
-
 add_executable(rodrigues_test rodrigues_test.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp)
+               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp # Part of ffea target rather than ffea_lib
+               )
+target_link_libraries(rodrigues_test PRIVATE ffea_lib)
 
-add_test(rodrigues_test ${CMAKE_CURRENT_BINARY_DIR}/rodrigues_test)
+add_test(NAME rodrigues_test COMMAND rodrigues_test)

@@ -34,7 +34,7 @@ int main(){
         bbar,
         bbar);
         
-    if (computed_energy > mathematica_result - 0.01 and computed_energy < mathematica_result + 0.01){
+    if (computed_energy > mathematica_result - 0.01 && computed_energy < mathematica_result + 0.01){
         return 0;
     }
     else{

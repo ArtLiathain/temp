@@ -21,9 +21,9 @@
 #  the research papers on the package.
 #
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
-
 add_executable(twisted_stretch_test twisted_stretch_test.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp)
+               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp # Part of ffea target rather than ffea_lib
+               )
+target_link_libraries(twisted_stretch_test PRIVATE ffea_lib)
 
-add_test(twisted_stretch_test ${CMAKE_CURRENT_BINARY_DIR}/twisted_stretch_test)
+add_test(NAME twisted_stretch_test COMMAND twisted_stretch_test)

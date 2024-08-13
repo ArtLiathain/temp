@@ -21,15 +21,15 @@
 //  the research papers on the package.
 //
 
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
-#include <stdlib.h>
-#include <math.h>
+#include <cstdlib>
+#include <cmath>
 #include <list>
 #include <vector>
 #include <iterator>
-#include <string.h>
-#include <unistd.h>
+#include <cstring>
+
 
 using namespace std;
 
@@ -360,6 +360,45 @@ class Volume
 // Main class defining surface
 class Surface
 {
+    /**
+     * Replacement for unistd.h getline()
+     *
+     * reads an entire line from stream, storing the address
+     * of the buffer containing the text into *lineptr.  The buffer is
+     * null-terminated and includes the newline character, if one was
+     * found.
+     */
+    size_t getline(char** lineptr, size_t* n, FILE* stream) {
+        // First pass, we should do a false run first to count
+		long i = 0;
+		char c;
+		do {
+			c = getc(stream);
+			if (c == EOF)
+				break;
+			++i;
+		} while (c != '\n');
+		// if lineptr needs malloc/realloc perform that
+		if (!*lineptr || *n < i + 1) {
+			*n = i;
+			*lineptr = static_cast<char*>(realloc(*lineptr, i + 1));
+			memset(*lineptr, 0, i + 1);
+		}
+		// Reset the stream ptr	
+		if(fseek(stream, ftell(stream) - i, SEEK_CUR)) {
+			printf("getline() failed\n");
+		}
+		// Second pass, copy the data
+		size_t j = 0;
+		do {
+			c = getc(stream);
+			if (c == EOF)
+				break;
+			*lineptr[j++] = c;
+		} while (c != '\n');
+		// Return the length of the string, without terminating char
+		return j;
+	}
 	public:
 		
 		Surface() 

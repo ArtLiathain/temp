@@ -21,9 +21,9 @@
 #  the research papers on the package.
 #
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
-
 add_executable(test_mutual_bend_against_mathematica test_mutual_bend_against_mathematica.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp)
+               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp # Part of ffea target rather than ffea_lib
+               )
+target_link_libraries(test_mutual_bend_against_mathematica PRIVATE ffea_lib)
 
-add_test(test_mutual_bend_against_mathematica ${CMAKE_CURRENT_BINARY_DIR}/test_mutual_bend_against_mathematica)
+add_test(NAME test_mutual_bend_against_mathematica COMMAND test_mutual_bend_against_mathematica)

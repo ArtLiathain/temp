@@ -35,11 +35,10 @@ int main(){
         bbar,
         bbar);
         
-    if (computed_energy > mathematica_result - 0.01 and computed_energy < mathematica_result + 0.01){
+    if (computed_energy > mathematica_result - 0.01 && computed_energy < mathematica_result + 0.01){
         std::cout << "Mutual bend against mathematica: passed\n";
         return 0;
-    }
-    else{
+    } else {
         std::cout << "Computed energy: " << computed_energy << "\n";
         std::cout << "Analytical energy: " << mathematica_result << "\n";
         return 1;

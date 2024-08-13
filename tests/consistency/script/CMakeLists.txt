@@ -26,21 +26,19 @@ set (TESTSCRIPT "${PROJECT_BINARY_DIR}/tests/consistency/script")
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
 add_executable(test_script_loader test_script_loader.cpp
-               ${PROJECT_SOURCE_DIR}/src/FFEA_input_reader.cpp
-               ${PROJECT_SOURCE_DIR}/src/SimulationParams.cpp
-               ${PROJECT_SOURCE_DIR}/src/FFEA_return_codes.cpp
                ${PROJECT_SOURCE_DIR}/src/FFEA_user_info.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_structure.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_interactions.cpp
-               ${PROJECT_SOURCE_DIR}/src/RngStream.cpp)
-if (USE_BOOST_INTERNAL)
-   add_dependencies(test_script_loader ourboost)
-endif(USE_BOOST_INTERNAL)
+               #${PROJECT_SOURCE_DIR}/src/FFEA_input_reader.cpp
+               #${PROJECT_SOURCE_DIR}/src/SimulationParams.cpp
+               #${PROJECT_SOURCE_DIR}/src/FFEA_return_codes.cpp
+               #${PROJECT_SOURCE_DIR}/src/rod_structure.cpp
+               #${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp
+               #${PROJECT_SOURCE_DIR}/src/rod_interactions.cpp
+               #${PROJECT_SOURCE_DIR}/src/RngStream.cpp
+               )
 
 file (COPY 2r5u_8ang.ffea DESTINATION ${TESTSCRIPT})
 
-target_link_libraries(test_script_loader ${LIBS_TO_LINK})
+target_link_libraries(test_script_loader PUBLIC ffea_lib)
 
-add_test(test_script_loader ${CMAKE_CURRENT_BINARY_DIR}/test_script_loader)
+add_test(NAME test_script_loader COMMAND test_script_loader)
 

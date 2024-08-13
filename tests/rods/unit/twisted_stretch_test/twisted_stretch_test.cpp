@@ -26,7 +26,7 @@ int main(){
     rod::rodrigues_rotation(m_ip1, e_ip1, 0.006283185, new_m_ip1);
     twisted_stretch_energy += rod::get_stretch_energy(1, e_i, e_i_equil);
     twisted_stretch_energy += rod::get_stretch_energy(1, e_ip1, e_ip1_equil);
-    if (unperturbed_energy - twisted_stretch_energy < 0.001 and unperturbed_energy - twisted_stretch_energy > -0.001){
+    if (unperturbed_energy - twisted_stretch_energy < 0.001 && unperturbed_energy - twisted_stretch_energy > -0.001){
         return 0;
     }
     printf("Unperturbed energy: %f", unperturbed_energy);

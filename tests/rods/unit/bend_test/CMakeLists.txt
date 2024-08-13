@@ -21,9 +21,9 @@
 #  the research papers on the package.
 #
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
-
 add_executable(bend_test bend_test.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp)
+               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp # Part of ffea target rather than ffea_lib
+               )
+target_link_libraries(bend_test PRIVATE ffea_lib)
 
-add_test(bend_test ${CMAKE_CURRENT_BINARY_DIR}/bend_test)
+add_test(NAME bend_test COMMAND bend_test)

@@ -69,7 +69,7 @@ int main(){
     float x2_current_45[3] = {0,1,-0.5};
     float energy_90 = get_bend_for_test(x2_current_90);
     float energy_45 = get_bend_for_test(x2_current_45);
-    if (energy_90 > energy_45 and energy_90 < 50 and energy_45 < 50){
+    if (energy_90 > energy_45 && energy_90 < 50 && energy_45 < 50){
         return 0;
     }
     return 1;

@@ -142,10 +142,6 @@ endif()
 #################################
 
 
-
-
-if(FALSE)
- 
 #######################################
 ######## INSTALL THE FFEA TOOLS  ######
 # 1 - Set up the install python path
@@ -171,7 +167,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/tests/physics")
 add_subdirectory("${PROJECT_SOURCE_DIR}/tests/ffeatools")
 add_subdirectory("${PROJECT_SOURCE_DIR}/tests/rods")
 set(IGNORE_NUMPY_TESTS "")
-if (${NUMPY_FOUND} STREQUAL "FAIL")
+if ("${NUMPY_FOUND}" STREQUAL "FAIL")
   set(IGNORE_NUMPY_TESTS 
        python_load_trajectory
        sphere_diffusion_mass sphere_diffusion_mass_check
@@ -250,5 +246,3 @@ if (USE_PACK)
   include(CPack)
   message(STATUS "Ready for a ${USE_PACK_DIST} package")
 endif(USE_PACK)
-
-endif()

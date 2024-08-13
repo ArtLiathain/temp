@@ -21,9 +21,9 @@
 #  the research papers on the package.
 #
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
-
 add_executable(test_parallel_transport test_parallel_transport.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp)
+               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp # Part of ffea target rather than ffea_lib
+               )
+target_link_libraries(test_parallel_transport PRIVATE ffea_lib)
 
-add_test(test_parallel_transport ${CMAKE_CURRENT_BINARY_DIR}/test_parallel_transport)
+add_test(NAME test_parallel_transport COMMAND test_parallel_transport)

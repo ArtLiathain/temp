@@ -21,11 +21,11 @@
 #  the research papers on the package.
 #
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
-
 add_executable(test_volume testVolume.cpp
-               ${PROJECT_SOURCE_DIR}/src/mat_vec_fns_II.cpp
-               ${PROJECT_SOURCE_DIR}/src/CheckTetrahedraOverlap.cpp
-               ${PROJECT_SOURCE_DIR}/src/VolumeIntersection.cpp)
+               #${PROJECT_SOURCE_DIR}/src/mat_vec_fns_II.cpp
+               #${PROJECT_SOURCE_DIR}/src/CheckTetrahedraOverlap.cpp
+               #${PROJECT_SOURCE_DIR}/src/VolumeIntersection.cpp
+               )
+target_link_libraries(test_volume PRIVATE ffea_lib)
 
-add_test(test_volume ${CMAKE_CURRENT_BINARY_DIR}/test_volume)
+add_test(NAME test_volume COMMAND test_volume)

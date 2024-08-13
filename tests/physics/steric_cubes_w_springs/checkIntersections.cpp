@@ -37,7 +37,7 @@ int print_tet(scalar (&T)[4][3]);
 FILE *set_up_trajfile(const char *traj_filename){
   
    FILE *trj; 
-   char c;
+   char c = 0;
    if ((trj = fopen(traj_filename, "r")) == NULL) {
       cout << "Failed to open: " << traj_filename << endl; 
       return NULL; 
@@ -57,7 +57,7 @@ int skipnlines(FILE *iFile, int n) {
 
    int i=0;
    char *ignore;
-   int len_crap = 256;
+   constexpr int len_crap = 256;
    char crap[len_crap];
    for (i=0; i<n; i++){
      ignore = fgets(crap, len_crap, iFile);

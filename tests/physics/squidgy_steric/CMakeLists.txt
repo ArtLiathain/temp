@@ -22,23 +22,21 @@
 #
 
 
-add_test(NAME squidgy_steric COMMAND ${PROJECT_BINARY_DIR}/src/ffea sphere_63_120.ffea)
+add_test(NAME squidgy_steric COMMAND ffea sphere_63_120.ffea)
 set_tests_properties(squidgy_steric PROPERTIES ENVIRONMENT OMP_NUM_THREADS=1)
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
-include_directories("${EIGEN3_INCLUDE_DIR}")
 add_executable(test_squidgy checkSquidgySpheres.cpp
-               ${PROJECT_SOURCE_DIR}/src/mat_vec_fns_II.cpp
                ${PROJECT_SOURCE_DIR}/src/BlobLite.cpp
-               ${PROJECT_SOURCE_DIR}/src/VolumeIntersection.cpp
-               ${PROJECT_SOURCE_DIR}/src/FFEA_return_codes.cpp)
-if (USE_EIGEN3_INTERNAL)
-   add_dependencies(test_squidgy getEigen)
-endif(USE_EIGEN3_INTERNAL)
-
+               #${PROJECT_SOURCE_DIR}/src/mat_vec_fns_II.cpp
+               #${PROJECT_SOURCE_DIR}/src/VolumeIntersection.cpp
+               #${PROJECT_SOURCE_DIR}/src/FFEA_return_codes.cpp
+               )
+               
+target_compile_features(test_squidgy PUBLIC cxx_std_17)
+target_link_libraries(test_squidgy PRIVATE ffea_lib)
 
 add_test(NAME squidgy_steric_check COMMAND 
-         ${CMAKE_CURRENT_BINARY_DIR}/test_squidgy 5e-9 ../sphere_63_120_structure/sphere_63_120.node ../sphere_63_120_structure/sphere_63_120.top 5e-9 ../sphere_63_120_structure/sphere_63_120.node ../sphere_63_120_structure/sphere_63_120.top sphere_63_120_trajectory.ftj 332)
+         test_squidgy 5e-9 ../sphere_63_120_structure/sphere_63_120.node ../sphere_63_120_structure/sphere_63_120.top 5e-9 ../sphere_63_120_structure/sphere_63_120.node ../sphere_63_120_structure/sphere_63_120.top sphere_63_120_trajectory.ftj 332)
 set_tests_properties(squidgy_steric_check PROPERTIES DEPENDS "squidgy_steric")
 
 

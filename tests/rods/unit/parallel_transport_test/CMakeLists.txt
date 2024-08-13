@@ -20,10 +20,9 @@
 #  To help us fund FFEA development, we humbly ask that you cite 
 #  the research papers on the package.
 #
-
-include_directories("${PROJECT_SOURCE_DIR}/include")
-
 add_executable(parallel_transport_test parallel_transport_test.cpp
-               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp)
+               ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp # Part of ffea target rather than ffea_lib
+               )
+target_link_libraries(parallel_transport_test PRIVATE ffea_lib)
 
-add_test(parallel_transport_test ${CMAKE_CURRENT_BINARY_DIR}/parallel_transport_test)
+add_test(NAME parallel_transport_test COMMAND parallel_transport_test)
