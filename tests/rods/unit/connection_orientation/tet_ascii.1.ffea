@@ -35,7 +35,7 @@
 		<input = bend.rod>
 		<output = bend.rodtraj>
 		<centroid_pos = (0.0,0.0,0.0)>
-		<rotation = (0.00, 0.00, 0,00)>
+		<rotation = (0.00, 0.00, 0.00)>
 		<scale = 1>
     </rod>
     

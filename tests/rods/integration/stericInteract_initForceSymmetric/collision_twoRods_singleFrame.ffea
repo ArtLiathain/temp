@@ -45,14 +45,14 @@
             <input = z-axis.rod>
             <output = outputs/1.rodtraj>
             <centroid_pos = (0.0,0.0,0.0)>
-            <rotation = (0.00, 0.00, 0,00)>
+            <rotation = (0.00, 0.00, 0.00)>
             <scale = 1>
     </rod>
     <rod>
             <input = z-axis.rod>
             <output = outputs/2.rodtraj>
             <centroid_pos = (14.7, 0.0, 0.0)>   < ! -- 2.5 nm radius [FFEA units] -- >
-            <rotation = (1.57, 0.00, 0,00)>     < ! -- 1/2 pi rad -- >
+            <rotation = (1.57, 0.00, 0.00)>     < ! -- 1/2 pi rad -- >
             <scale = 1>
     </rod>
 </system>
