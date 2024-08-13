@@ -155,7 +155,7 @@ Rods can be included in FFEA script files either with or without other FFEA obje
     		<input = dest.rod>
     		<output = dest.rodtraj>
     		<centroid_pos = (0.0,0.0,0.0)> <!-- Translation vector -->
-    		<rotation = (0.00, 0.00, 0,00)> <!-- Euler angles, X, Y and Z -->
+    		<rotation = (0.00, 0.00, 0.00)> <!-- Euler angles, X, Y and Z -->
     		<scale = 1>
     </rod>
 
