@@ -23,6 +23,8 @@
 
 #include "FFEA_input_reader.h"
 
+#include <sstream>
+
 FFEA_input_reader::FFEA_input_reader() {
 	buf_string = "";
 	copying = 0;
@@ -212,7 +214,7 @@ int FFEA_input_reader::parse_map_tag(string input, int *map_indices, string *map
 	parse_tag(input, lrvalue);
 
 	// Check if map
-	split_string(lrvalue[0], indexlrvalue, "(");
+	split_string(lrvalue[0], indexlrvalue, "(", 2);
 	if(indexlrvalue[0] != "map") {
 		cout << indexlrvalue[0] << endl;
 		FFEA_error_text();
@@ -225,11 +227,11 @@ int FFEA_input_reader::parse_map_tag(string input, int *map_indices, string *map
 
 	// Get indices
 	indexlrvalue[1] = boost::erase_last_copy(indexlrvalue[1], ")");
-	split_string(indexlrvalue[1], map_indices, ",");
+	split_string(indexlrvalue[1], map_indices, ",", 2);
 	return FFEA_OK;
 }
 
-int FFEA_input_reader::split_string(string input, string *output, string delim) {
+int FFEA_input_reader::split_string(string input, string *output, string delim, size_t output_length) {
 
 	vector<string> lrvalvec;
 	vector<string>::iterator it;
@@ -237,6 +239,11 @@ int FFEA_input_reader::split_string(string input, string *output, string delim) 
 
 	int i = 0;
 	for(it = lrvalvec.begin(); it != lrvalvec.end(); it++) {
+		if (i >= output_length) {
+			std::stringstream ss;
+			ss << "String \"" << input << "\" contains more than the expected " << output_length << " items, it may be malformed.";
+			throw std::out_of_range(ss.str());
+		}
 		output[i] = *it;
 		boost::trim(output[i++]);
 	}
@@ -259,7 +266,7 @@ int FFEA_input_reader::split_string(string input, vector<string> &output, string
 	return lrvalvec.size();
 }
 
-int FFEA_input_reader::split_string(string input, int *output, string delim) {
+int FFEA_input_reader::split_string(string input, int *output, string delim, size_t output_length) {
 
 	vector<string> lrvalvec;
 	vector<string>::iterator it;
@@ -267,12 +274,17 @@ int FFEA_input_reader::split_string(string input, int *output, string delim) {
 
 	int i = 0;
 	for(it = lrvalvec.begin(); it != lrvalvec.end(); it++) {
+		if (i >= output_length) {
+			std::stringstream ss;
+			ss << "String \"" << input << "\" contains more than the expected " << output_length << " items, it may be malformed.";
+			throw std::out_of_range(ss.str());
+		}
 		output[i++] = atoi((*it).c_str());
 	}
 	return lrvalvec.size();
 }
 
-int FFEA_input_reader::split_string(string input, scalar *output, string delim) {
+int FFEA_input_reader::split_string(string input, scalar *output, string delim, size_t output_length) {
 
 	vector<string> lrvalvec;
 	vector<string>::iterator it;
@@ -280,6 +292,11 @@ int FFEA_input_reader::split_string(string input, scalar *output, string delim) 
 
 	int i = 0;
 	for(it = lrvalvec.begin(); it != lrvalvec.end(); it++) {
+		if (i >= output_length) {
+			std::stringstream ss;
+			ss << "String \"" << input << "\" contains more than the expected " << output_length << " items, it may be malformed.";
+			throw std::out_of_range(ss.str());
+		}
 		output[i++] = atof((*it).c_str());
 	}
 	return lrvalvec.size();

@@ -55,16 +55,16 @@ class FFEA_input_reader {
 		int parse_map_tag(string input, int *map_indices, string *map_fname);
 
 		/** Split string around delim and return as strings */ 
-		int split_string(string input, string *output, string delim);
+		int split_string(string input, string *output, string delim, size_t output_length);
 
 		/** Split string around delim and return as strings vector. */ 
 		int split_string(string input, vector<string> &output, string delim);
 
 		/** Split string around delim and return as ints */ 
-		int split_string(string input, int *output, string delim);
+		int split_string(string input, int *output, string delim, size_t output_length);
 
 		/** Split string around delim and return as scalars */ 
-		int split_string(string input, scalar *output, string delim);
+		int split_string(string input, scalar *output, string delim, size_t output_length);
         
 	private:
 

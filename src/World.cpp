@@ -3046,14 +3046,14 @@ int World::read_and_build_system(vector<string> script_vector)
                 blob_conf[i].set_centroid = 1;
                 lrvalue[1] = boost::erase_last_copy(boost::erase_first_copy(lrvalue[1], "("), ")");
                 boost::trim(lrvalue[1]);
-                systemreader->split_string(lrvalue[1], blob_conf[i].centroid, ",");
+                systemreader->split_string(lrvalue[1], blob_conf[i].centroid, ",", 3);
             }
             else if (lrvalue[0] == "velocity")
             {
                 blob_conf[i].set_velocity = 1;
                 lrvalue[1] = boost::erase_last_copy(boost::erase_first_copy(lrvalue[1], "("), ")");
                 boost::trim(lrvalue[1]);
-                systemreader->split_string(lrvalue[1], blob_conf[i].velocity, ",");
+                systemreader->split_string(lrvalue[1], blob_conf[i].velocity, ",", 3);
                 for (int ivt = 0; ivt < 3; ivt++)
                 {
                     blob_conf[i].velocity[ivt] /= mesoDimensions::velocity;
@@ -3064,7 +3064,7 @@ int World::read_and_build_system(vector<string> script_vector)
                 blob_conf[i].set_rotation = 1;
                 lrvalue[1] = boost::erase_last_copy(boost::erase_first_copy(lrvalue[1], "("), ")");
                 boost::trim(lrvalue[1]);
-                if (systemreader->split_string(lrvalue[1], blob_conf[i].rotation, ",") == 3)
+                if (systemreader->split_string(lrvalue[1], blob_conf[i].rotation, ",", 9) == 3)
                 {
                     blob_conf[i].rotation_type = 0;
                 }
@@ -4286,7 +4286,7 @@ rod::Rod_blob_interface *World::rod_blob_interface_from_block(vector<string> blo
                 if (sub_tag_out[0] == "blob_node_ids")
                 {
                     sub_tag_out[1] = boost::erase_last_copy(boost::erase_first_copy(sub_tag_out[1], "("), ")");
-                    systemreader->split_string(sub_tag_out[1], blob_node_ids, ",");
+                    systemreader->split_string(sub_tag_out[1], blob_node_ids, ",", 3);
                 }
 
                 if ((sub_tag_out[0] == "order"))
@@ -4298,7 +4298,7 @@ rod::Rod_blob_interface *World::rod_blob_interface_from_block(vector<string> blo
                 {
                     scalar rotation_scalar[3];
                     sub_tag_out[1] = boost::erase_last_copy(boost::erase_first_copy(sub_tag_out[1], "("), ")");
-                    systemreader->split_string(sub_tag_out[1], rotation_scalar, ",");
+                    systemreader->split_string(sub_tag_out[1], rotation_scalar, ",", 3);
                     std::copy(rotation_scalar, rotation_scalar + 3, rotation);
                 }
 
@@ -4306,7 +4306,7 @@ rod::Rod_blob_interface *World::rod_blob_interface_from_block(vector<string> blo
                 {
                     scalar node_weighting_scalar[3];
                     sub_tag_out[1] = boost::erase_last_copy(boost::erase_first_copy(sub_tag_out[1], "("), ")");
-                    systemreader->split_string(sub_tag_out[1], node_weighting_scalar, ",");
+                    systemreader->split_string(sub_tag_out[1], node_weighting_scalar, ",", 3);
                     std::cout << "node weighting = [" << node_weighting_scalar[0] << ", " << node_weighting_scalar[1] << ", " << node_weighting_scalar[2] << "\n";
                     std::copy(node_weighting_scalar, node_weighting_scalar + 3, node_weighting);
                 }
@@ -4440,7 +4440,7 @@ rod::Rod *World::rod_from_block(vector<string> block, int block_id, FFEA_input_r
             scalar centroid_pos[3];
             float converted_centroid[3];
             tag_out[1] = boost::erase_last_copy(boost::erase_first_copy(tag_out[1], "("), ")");
-            systemreader->split_string(tag_out[1], centroid_pos, ",");
+            systemreader->split_string(tag_out[1], centroid_pos, ",", 3);
             // convert to floats
             std::copy(centroid_pos, centroid_pos + 3, converted_centroid);
             // set centroid
@@ -4454,7 +4454,7 @@ rod::Rod *World::rod_from_block(vector<string> block, int block_id, FFEA_input_r
             // get centroid and convert it to array
             scalar rotation[3];
             tag_out[1] = boost::erase_last_copy(boost::erase_first_copy(tag_out[1], "("), ")");
-            systemreader->split_string(tag_out[1], rotation, ",");
+            systemreader->split_string(tag_out[1], rotation, ",", 3);
             // convert to floats
             float converted_rotation[3];
             std::copy(rotation, rotation + 3, converted_rotation);
