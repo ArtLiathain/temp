@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
     }
 
     // set up a script_fname with the absolute path
-    fs::path fs_script_fname = script_fname;
+    fs::path fs_script_fname = fs::absolute(script_fname);
     fs::path canonicalPath = fs::canonical(fs_script_fname.parent_path());
     fs_script_fname = canonicalPath / fs_script_fname.filename();
     script_fname = fs_script_fname.string();
