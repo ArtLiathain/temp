@@ -27,9 +27,6 @@ set_tests_properties(squidgy_steric PROPERTIES ENVIRONMENT OMP_NUM_THREADS=1)
 
 add_executable(test_squidgy checkSquidgySpheres.cpp
                ${PROJECT_SOURCE_DIR}/src/BlobLite.cpp
-               #${PROJECT_SOURCE_DIR}/src/mat_vec_fns_II.cpp
-               #${PROJECT_SOURCE_DIR}/src/VolumeIntersection.cpp
-               #${PROJECT_SOURCE_DIR}/src/FFEA_return_codes.cpp
                )
                
 target_compile_features(test_squidgy PUBLIC cxx_std_17)

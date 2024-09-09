@@ -27,7 +27,6 @@ add_executable(twist_bend_independence_v2 twist_bend_independence_v2.cpp
                ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp # Part of ffea target rather than ffea_lib
                ${PROJECT_SOURCE_DIR}/src/rod_interactions.cpp # Part of ffea target rather than ffea_lib
                ${PROJECT_SOURCE_DIR}/src/rod_structure.cpp # Part of ffea target rather than ffea_lib
-               #${PROJECT_SOURCE_DIR}/src/RngStream.cpp
                )
 target_link_libraries(twist_bend_independence_v2 PRIVATE ffea_lib)
 

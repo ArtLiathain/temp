@@ -27,7 +27,6 @@ add_executable(test_bend_for_non_straight_equilibrium test_bend_for_non_straight
                ${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp # Part of ffea target rather than ffea_lib
                ${PROJECT_SOURCE_DIR}/src/rod_interactions.cpp # Part of ffea target rather than ffea_lib
                ${PROJECT_SOURCE_DIR}/src/rod_structure.cpp # Part of ffea target rather than ffea_lib
-               #${PROJECT_SOURCE_DIR}/src/RngStream.cpp
                )
 target_link_libraries(test_bend_for_non_straight_equilibrium PRIVATE ffea_lib)
 

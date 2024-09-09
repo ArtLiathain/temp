@@ -26,10 +26,7 @@ project(FFEA VERSION 2.7.2 LANGUAGES CXX C)
 
 # set(CMAKE_INCLUDE_DIRECTORIES_BEFORE ON)
 set(PACKAGE_NAME "ffea")
-#set(VERSION "2") $PROJECT_VERSION_MAJOR
-#set(MINOR   "7") $PROJECT_VERSION_MINOR
-#set(PATCH   "2") $PROJECT_VERSION_PATCH
-#set(PACKAGE_VERSION "${VERSION}.${MINOR}.${PATCH}") $PROJECT_VERSION
+set(PACKAGE_VERSION ${PROJECT_VERSION})
 
 
 #todo check if any of these are now redundant.
@@ -59,17 +56,15 @@ set_property(CACHE BUILD_DOC PROPERTY STRINGS "YES;NO;TRY")
 
 # Docs
 include(./cmake/doxygen.cmake)
-if (${BUILD_DOC} STREQUAL "ONLY")
+if(${BUILD_DOC} STREQUAL "ONLY")
   return()
-endif ()
+endif()
 
 
 #############################################
 ###### SOURCES TO BUILD AND INSTALL  ########
 add_subdirectory("${PROJECT_SOURCE_DIR}/src")
 #############################################
-
-
 
 
 # 9 ### PYTHON ######
@@ -79,64 +74,57 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/src")
 #execute_process(
 #    COMMAND "${PYTHON_EXECUTABLE}" -c "from __future__ import print_function\ntry:\n\t import numpy\n\t print('OK',end=\"\")\nexcept:\n\t print('FAIL',end=\"\")"
 #    OUTPUT_VARIABLE NUMPY_FOUND)
-#if ("${NUMPY_FOUND}" STREQUAL "FAIL")
+#if("${NUMPY_FOUND}" STREQUAL "FAIL")
 #  message(WARNING "NumPy was not found: Several tests won't be run, and the ffeatools script and API will be mostly unusable")
-#endif ("${NUMPY_FOUND}" STREQUAL "FAIL")
+#endif("${NUMPY_FOUND}" STREQUAL "FAIL")
 #if  ("${NUMPY_FOUND}" STREQUAL "OK")
 #  message(STATUS "Found NumPy")
 #endif  ("${NUMPY_FOUND}" STREQUAL "OK")
 
-
-
-
 # 10 ### FAST! ##########
-if (NOT USE_DEBUG)
- if (NOT USE_PACK)
-  if (USE_FAST)
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if(NOT USE_DEBUG)
+ if(NOT USE_PACK)
+  if(USE_FAST)
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
       if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "4.8")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math -fipa-pta")
-      else(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "4.8")
-        if (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "7.0")
+      else()
+        if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "7.0")
           set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math -fipa-pta -march=native")
-        else(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "7.0")
+        else()
           set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math -march=native")
-        endif (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "7.0")
-      endif(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "4.8")
-    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+        endif()
+      endif()
+    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ipo -no-prec-div -fp-model fast=2 -xHost")
     endif()
-  endif(USE_FAST)
-else (NOT USE_PACK)
-  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  endif()
+ else()
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math -mtune=generic -static -static-libgcc -static-libstdc++")
   else()
-      mymessage(FATAL_ERROR "No packaging without GNU compilers")
+      message(FATAL_ERROR "No packaging without GNU compilers")
   endif()
-  if (USE_FAST)
+  if(USE_FAST)
       message(STATUS "USE_FAST changed to USE_PACK!")
-  endif(USE_FAST)
- endif(NOT USE_PACK)
-endif(NOT USE_DEBUG)
+  endif()
+ endif()
+endif()
 
 
 # Debug
-if (USE_DEBUG)
-	# Let the user know what mayhem they may have caused
-	message(STATUS "USE_DEBUG has been removed, instead pass -DCMAKE_BUILD_TYPE=Debug at CMake configure time.")
-endif (USE_DEBUG)
+if(USE_DEBUG)
+    # Let the user know what mayhem they may have caused
+    message(STATUS "USE_DEBUG has been removed, instead pass -DCMAKE_BUILD_TYPE=Debug at CMake configure time.")
+endif(USE_DEBUG)
 if(NOT ${GENERATOR_IS_MULTI_CONFIG})
-    if (NOT CMAKE_BUILD_TYPE)
+    if(NOT CMAKE_BUILD_TYPE)
         set(CMAKE_BUILD_TYPE "Release")
     endif()
 endif()
-if (CMAKE_BUILD_TYPE EQUAL "Debug")
+if(CMAKE_BUILD_TYPE EQUAL "Debug")
     target_compile_options(${PROJECT_NAME} $<$<CONFIG:Debug>:-ggdb3>)
 endif()
-
-#message(STATUS "Compiler flags: ${CMAKE_CXX_FLAGS}")
-#get_directory_property( DirDefs COMPILE_DEFINITIONS )
-#message(STATUS "Compiler definitions: ${DirDefs}" )
 
 ######## END OF LIBRARIES #######
 #################################
@@ -148,7 +136,7 @@ endif()
 include(${CMAKE_ROOT}/Modules/FindPythonInterp.cmake)
 set(PYTHONSTUFF "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages/ffeatools")
 # Debian and derivatives use dist-packages instead of site-packages. 
-if (USE_PACK_DIST STREQUAL "DEB")
+if(USE_PACK_DIST STREQUAL "DEB")
   set(PYTHONSTUFF "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/dist-packages/ffeatools")
 endif(USE_PACK_DIST STREQUAL "DEB")
 
@@ -167,7 +155,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/tests/physics")
 add_subdirectory("${PROJECT_SOURCE_DIR}/tests/ffeatools")
 add_subdirectory("${PROJECT_SOURCE_DIR}/tests/rods")
 set(IGNORE_NUMPY_TESTS "")
-if ("${NUMPY_FOUND}" STREQUAL "FAIL")
+if("${NUMPY_FOUND}" STREQUAL "FAIL")
   set(IGNORE_NUMPY_TESTS 
        python_load_trajectory
        sphere_diffusion_mass sphere_diffusion_mass_check
@@ -213,10 +201,10 @@ set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_CONTACT "ffea@leeds.ac.uk")
 
 # # # CPACK: DEB or RPM # # # 
-if (USE_PACK_DIST STREQUAL "DEB") 
+if(USE_PACK_DIST STREQUAL "DEB") 
   set(CPACK_GENERATOR "TBZ2" "DEB")
   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}_amd64")
-elseif (USE_PACK_DIST STREQUAL "RPM")
+elseif(USE_PACK_DIST STREQUAL "RPM")
   set(CPACK_GENERATOR "TBZ2" "RPM")
   # set(CPACK_GENERATOR "TXZ" "RPM")
 endif()
@@ -242,7 +230,7 @@ set(CPACK_RPM_PACKAGE_REQUIRES "numpy, python-matplotlib")
 
 
 #must come after all cpack settings!
-if (USE_PACK)
+if(USE_PACK)
   include(CPack)
   message(STATUS "Ready for a ${USE_PACK_DIST} package")
 endif(USE_PACK)

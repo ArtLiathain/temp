@@ -21,9 +21,7 @@
 #  the research papers on the package.
 #
 
-add_executable(test_rngStream testRngStream.cpp
-                              #${PROJECT_SOURCE_DIR}/src/RngStream.cpp
-)
+add_executable(test_rngStream testRngStream.cpp)
 target_link_libraries(test_rngStream PRIVATE ffea_lib)
 
 add_test(NAME test_rngStream COMMAND test_rngStream)

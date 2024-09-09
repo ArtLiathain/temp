@@ -27,13 +27,6 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 
 add_executable(test_script_loader test_script_loader.cpp
                ${PROJECT_SOURCE_DIR}/src/FFEA_user_info.cpp
-               #${PROJECT_SOURCE_DIR}/src/FFEA_input_reader.cpp
-               #${PROJECT_SOURCE_DIR}/src/SimulationParams.cpp
-               #${PROJECT_SOURCE_DIR}/src/FFEA_return_codes.cpp
-               #${PROJECT_SOURCE_DIR}/src/rod_structure.cpp
-               #${PROJECT_SOURCE_DIR}/src/rod_math_v9.cpp
-               #${PROJECT_SOURCE_DIR}/src/rod_interactions.cpp
-               #${PROJECT_SOURCE_DIR}/src/RngStream.cpp
                )
 
 file (COPY 2r5u_8ang.ffea DESTINATION ${TESTSCRIPT})

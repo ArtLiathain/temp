@@ -28,4 +28,4 @@ set_tests_properties(cyl_youngs_mod PROPERTIES ENVIRONMENT OMP_NUM_THREADS=1)
 add_test(NAME cyl_youngs_mod_check COMMAND ${PYTHON_EXECUTABLE} calcE.py)
 set_tests_properties(cyl_youngs_mod_check PROPERTIES 
                      DEPENDS cyl_youngs_mod
-		     ENVIRONMENT PYTHONPATH=${PROJECT_SOURCE_DIR}/ffeatools/modules:$ENV{PYTHONPATH})
+             ENVIRONMENT PYTHONPATH=${PROJECT_SOURCE_DIR}/ffeatools/modules:$ENV{PYTHONPATH})

@@ -29,5 +29,5 @@ add_test(NAME cyl_flexrig_check COMMAND ${PYTHON_EXECUTABLE} calcEI.py)
 
 set_tests_properties(cyl_flexrig_check PROPERTIES 
                      DEPENDS cyl_flexrig
-		     ENVIRONMENT PYTHONPATH=${PROJECT_SOURCE_DIR}/ffeatools/modules:$ENV{PYTHONPATH})
+        ENVIRONMENT PYTHONPATH=${PROJECT_SOURCE_DIR}/ffeatools/modules:$ENV{PYTHONPATH})
 

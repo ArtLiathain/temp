@@ -157,7 +157,7 @@ add_executable(ffea ${FFEA_SRC} ${FFEA_INCLUDE})
 target_link_libraries(ffea PRIVATE ffea_lib)
 
 
-if (USE_OPENMP)
+if(USE_OPENMP)
     target_compile_definitions(ffea PRIVATE FFEA_PARALLEL_WITHIN_BLOB)
     add_executable(ffea_mb
         ffea.cpp
@@ -177,48 +177,24 @@ if (USE_OPENMP)
     target_link_libraries(ffea_mb PRIVATE ffea_lib)
 endif()
 
-#add_dependencies(ffea ffea_lib)
-#if (USE_OPENMP)
-#    add_dependencies(ffea_mb ffea_lib)
-#endif()
-
-#if (USE_BOOST_INTERNAL)
-#   add_dependencies(ffea_lib ourboost)
-#endif(USE_BOOST_INTERNAL)
-#if (USE_EIGEN3_INTERNAL)
-#   add_dependencies(ffea_lib getEigen)
-#endif(USE_EIGEN3_INTERNAL)
-
-
-
-
-
 #####################################
 #### Build Configuration Options ####
 #####################################
 
-#todo What is the purpose of this?
+# This setting enables increased version information printing
 set(FFEA_DEVEL OFF)
-if (FFEA_DEVEL)
+if(FFEA_DEVEL)
     target_compile_definitions(ffea_lib PUBLIC FFEA_DEVEL)
-endif ()
-
-
-# This is clearing a variable that hasn't been used yet.
-#lib linking should be moved to targets anyway
-#set (LIBS_TO_LINK)
-
-#set (NEW_CXX_NEEDED_MSG "You are using ${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}, but need a more recent C++ compiler")
-
+endif()
 
 ##############################
 #### LIBRARIES AND CFLAGS ####
 ##############################
 
 # MPI
-if (USE_MPI)
+if(USE_MPI)
     find_package(MPI REQUIRED)
-    if (MPI_CXX_FOUND)
+    if(MPI_CXX_FOUND)
         # If the MPI installation brings in -flto (i.e. Ubuntu 22.04 libmpich-dev), warn about it and suggest a reconfiguration.
         if(MPI_CXX_COMPILE_OPTIONS MATCHES ".*\-flto.*")
             message(WARNING
@@ -235,7 +211,7 @@ if (USE_MPI)
 endif()
 
 # Precision
-if (USE_PRECISION EQUAL "1")
+if(USE_PRECISION EQUAL "1")
     target_compile_definitions(ffea_lib PUBLIC USE_DOUBLE_LESS)
 elseif(USE_PRECISION EQUAL "2")
     target_compile_definitions(ffea_lib PUBLIC USE_DOUBLE)
@@ -247,10 +223,10 @@ endif()
 
 
 
-# Setup version header
+# Dynamically create version header
 find_package(Git 1.6)
 set(VERSION_CMAKECONF "")
-if (GIT_FOUND)
+if(GIT_FOUND)
     execute_process(
          COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:'%H'
          WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
@@ -269,11 +245,11 @@ if (GIT_FOUND)
          OUTPUT_VARIABLE PACKAGE_BRANCH
          ERROR_VARIABLE PACKAGE_BRANCH_ERROR)
 
-    if (NOT "${PACKAGE_COMMIT}" STREQUAL "${PACKAGE_DATE}")
+    if(NOT "${PACKAGE_COMMIT}" STREQUAL "${PACKAGE_DATE}")
           target_compile_definitions(ffea_lib PUBLIC USE_CMAKECONF)
          set(VERSION_CMAKECONF "TRUE")
          string(STRIP ${PACKAGE_BRANCH} PACKAGE_BRANCH)
-    endif (NOT "${PACKAGE_COMMIT}" STREQUAL "${PACKAGE_DATE}")
+    endif(NOT "${PACKAGE_COMMIT}" STREQUAL "${PACKAGE_DATE}")
 endif(GIT_FOUND)
 
 configure_file("${PROJECT_SOURCE_DIR}/include/FFEA_version.h.in"
@@ -284,24 +260,24 @@ include_directories(${PROJECT_BINARY_DIR}/include)
 
 
 # OpenMP
-if (USE_OPENMP)
+if(USE_OPENMP)
     find_package(OpenMP)
-    if (OPENMP_FOUND)
-        if (CMAKE_GENERATOR MATCHES "Visual Studio")
-            if (MSVC_TOOLSET_VERSION GREATER_EQUAL 142) 
+    if(OPENMP_FOUND)
+        if(CMAKE_GENERATOR MATCHES "Visual Studio")
+            if(MSVC_TOOLSET_VERSION GREATER_EQUAL 142) 
                 # Visual Studio 2019+ requires experimental flag for OMP SIMD support
                 set_property(TARGET OpenMP::OpenMP_CXX PROPERTY INTERFACE_COMPILE_OPTIONS "-openmp:experimental")
                 # CMake 3.30 alt: set(OpenMP_RUNTIME_MSVC "experimental")
-            else ()
+            else()
                 unset(OPENMP_FOUND)
                 message(FATAL_ERROR "Visual Studio earlier than 2019 does not support required OpenMP features")
-            endif ()
+            endif()
         endif()
     else()
         message(FATAL_ERROR "MPI C++ Support was not found!")
     endif()
 endif()
-if (OPENMP_FOUND)
+if(OPENMP_FOUND)
     target_compile_definitions(ffea_lib PUBLIC USE_OPENMP)
     target_link_libraries(ffea_lib PUBLIC OpenMP::OpenMP_CXX)
 endif()
@@ -309,7 +285,7 @@ endif()
 
 # Parallel futures
 # Note, this should now be widely supported can it be made mandatory?
-if (USE_FUTURE)
+if(USE_FUTURE)
     target_compile_definitions(ffea_lib FFEA_PARALLEL_FUTURE)
 endif()
 
@@ -322,45 +298,36 @@ endif()
 
 
 # BOOST
-if (USE_BOOST_INTERNAL) 
+if(USE_BOOST_INTERNAL) 
     message(STATUS "Configuring internal Boost")
     include(../cmake/GetBoostModern.cmake)
 else() 
-    set (Boost_NO_BOOST_CMAKE ON)
-    set (Boost_USE_STATIC_LIBS ON)
+    set(Boost_NO_BOOST_CMAKE ON)
+    set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED COMPONENTS program_options)
-if (NOT Boost_FOUND)
+if(NOT Boost_FOUND)
     message(FATAL_ERROR "You could provide valid paths through either:
     -- BOOST_ROOT or
     -- BOOST_INCLUDEDIR and BOOST_LIBRARYDIR or
     try reconfiguring with -DUSE_BOOST_INTERNAL")
-endif ()
+endif()
 endif()
 target_link_libraries(ffea_lib PUBLIC Boost::core Boost::program_options Boost::math Boost::algorithm)
 
-# Anyway:
-#include_directories(${Boost_INCLUDE_DIRS})
-#set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -L${Boost_LIBRARY_DIRS}")
-#set(LIBS_TO_LINK ${LIBS_TO_LINK} ${Boost_LIBRARIES})
-
-
-
 # EIGEN3
-if (USE_EIGEN3_INTERNAL) 
+if(USE_EIGEN3_INTERNAL) 
     message(STATUS "Configuring internal Eigen")
     # 6.a.1 # set up EIGEN3_HOME
     set(EIGEN3_HOME ${PROJECT_BINARY_DIR}/external/install_eigen)
     # 6.a.2 # get and install Eigen in EIGEN3_HOME
     include(../cmake/GetEigen3Modern.cmake)
-else () 
-
+else()
     # 6.1 # set up EIGEN3_HOME
-    if (EIGEN3_HOME)  
+    if(EIGEN3_HOME)  
         set(EIGEN3_HOME ${EIGEN3_HOME} CACHE PATH "[OPTIONAL] Path to your local EIGEN3 installation")
     else()
         set(EIGEN3_HOME $ENV{EIGEN3_HOME} CACHE PATH "[OPTIONAL] Path to your local EIGEN3 installation")
     endif()
-
   # 6.2 # we guarantee that if $EIGEN3_HOME is given, it will be take 
         # before than any of the other possible installations available.
   set(CMAKE_PREFIX_PATH ${EIGEN3_HOME} $ENV{EIGEN_HOME} ${CMAKE_PREFIX_PATH})
@@ -368,27 +335,20 @@ else ()
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
   # 6.4 # Go for it:
   find_package(Eigen3 3.2.0 REQUIRED)
-  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-     if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "5.0")
-       if (${EIGEN3_VERSION} VERSION_LESS "3.3") 
-         if (NOT ${EIGEN3_VERSION} VERSION_EQUAL "3.2.10")
-           message(FATAL_ERROR "\n Found Eigen3 ${EIGEN3_VERSION}, but GCC 5.0 and higher need Eigen version 3.2.10, or > 3.3. Release candidates for 3.3 (internally known as 3.2.91 and higher) are known to fail.")
-         endif ()
-       endif () 
-     endif ()
-  endif ()
-  
-
-endif () 
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
+     AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "5.0"
+     AND ${EIGEN3_VERSION} VERSION_LESS "3.3"
+     AND NOT ${EIGEN3_VERSION} VERSION_EQUAL "3.2.10")
+        message(FATAL_ERROR "\n Found Eigen3 ${EIGEN3_VERSION}, but GCC 5.0 and higher need Eigen version 3.2.10, or > 3.3. Release candidates for 3.3 (internally known as 3.2.91 and higher) are known to fail.")
+  endif()
+endif() 
 target_link_libraries(ffea_lib PUBLIC Eigen3::Eigen)
 
 
-
-#target_link_libraries(ffea PRIVATE ${CMAKE_THREAD_LIBS_INIT}) # find threads isn't used anywhere?
-install (TARGETS ffea RUNTIME DESTINATION bin)
+# Setup install actions
+install(TARGETS ffea RUNTIME DESTINATION bin)
 
 if(USE_OPENMP)
-    #target_link_libraries(ffea_mb PRIVATE ${CMAKE_THREAD_LIBS_INIT})
-    install (TARGETS ffea ffea_mb RUNTIME DESTINATION bin)
+    install(TARGETS ffea ffea_mb RUNTIME DESTINATION bin)
 endif(USE_OPENMP)
 
