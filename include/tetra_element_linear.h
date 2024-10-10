@@ -44,7 +44,7 @@ class Blob;
 
 #define NUM_NODES_LINEAR_TET 4
 // Also defined in BlobLite.h/SecondOrderFunctions.h
-#define NUM_NODES_QUADRATIC_TET 10
+#define NUM_NODES_QUADRATIC_TET 4
 
 /*
  * A preprocessor macro generating code that calculates a submatrix of the bulk viscous

@@ -47,7 +47,7 @@
 
 // Also defined in tetra_element_linear.h/BlobLite.h
 #ifndef NUM_NODES_QUADRATIC_TET
-#define NUM_NODES_QUADRATIC_TET 10
+#define NUM_NODES_QUADRATIC_TET 4
 #endif
 
 #include "mesh_node.h"
