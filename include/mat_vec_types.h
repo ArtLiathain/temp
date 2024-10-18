@@ -141,22 +141,23 @@ private:
 /**
  * Defines a 12 vector (just for ease of use, clarity and compiler type checking)
  */
-typedef scalar vector12[12];
+typedef std::array<scalar, 12> vector12;
+typedef std::array<scalar, 9> vector9;
 
 /**
  * Defines a 12x12 matrix
  */
-typedef scalar matrix12[12][12];
+typedef std::array<std::array<scalar, 12>, 12> matrix12;
 
 /**
  * Defines a 3x3 matrix
  */
-typedef scalar matrix3[3][3];
+typedef std::array<std::array<scalar, 3>, 3> matrix3;
 
 /**
  * Defines a 4x4 matrix
  */
-typedef scalar matrix4[4][4];
+typedef std::array<std::array<scalar, 4>, 4> matrix4;
 
 /**
  * A useful type for holding the upper triangular part of symmetric 4x4 matrices

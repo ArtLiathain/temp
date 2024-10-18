@@ -211,13 +211,13 @@ public:
     void calculate_electrostatic_forces();
 
     /** @brief Calculates the Jacobian matrix for this element */
-    void calculate_jacobian(matrix3 J);
+    void calculate_jacobian(matrix3 &J);
 
     /** @brief Calculates Deformation Gradient */
-    void calc_deformation(matrix3 J);
+    void calc_deformation(matrix3 &J);
 
     /** @brief Calculate the elastic contribution to the force */
-    void calc_elastic_force_vector(vector12 F);
+    void calc_elastic_force_vector(vector12 &F);
 
     /** @brief
      * Inverts the given jacobian matrix J, using this to calculate the derivatives
@@ -235,7 +235,7 @@ public:
      * Function also (as a by-product of the inversion) calculates the volume of the
      * element whose jacobian this is, which is stored in 'vol'.
      */
-    bool calc_shape_function_derivatives_and_volume(matrix3 J);
+    bool calc_shape_function_derivatives_and_volume(matrix3 &J);
 
     /** @brief
      *  Prints a variety of structural details about the element to analyse it's configuration
@@ -256,12 +256,12 @@ public:
     /*
      *
      */
-    void add_shear_elastic_stress(matrix3 J, matrix3 stress);
+    void add_shear_elastic_stress(matrix3 &J, matrix3 &stress);
 
     /*
      *
      */
-    void add_bulk_elastic_stress(matrix3 stress);
+    void add_bulk_elastic_stress(matrix3 &stress);
 
     /** @brief
      * Given the shape function derivatives, the element volume and a random number generator, this
@@ -275,17 +275,17 @@ public:
     /** @brief
      * Applies the given stress tensor to the shape function derivatives to get the contribution to du
      */
-    void apply_stress_tensor(matrix3 stress, vector12 du);
+    void apply_stress_tensor(matrix3 &stress, vector12 &du);
 
     /** @brief
      * Sets the given 12-vector to the velocities of this element's four nodes,
      */
-    void get_element_velocity_vector(vector12 v);
+    void get_element_velocity_vector(vector12 &v);
 
     /** @brief
      * Add this element's nodal forces to those given in the force 12-vector
      */
-    void add_element_force_vector(vector12 force);
+    void add_element_force_vector(vector12 &force);
 
     /** @brief Add given force to the specified node of this element */
     void add_force_to_node(int i, arr3 &f);
@@ -300,7 +300,7 @@ public:
      * Applies the mass matrix (for a linear tetrahedral element of density rho and equilibrium volume vol_0)
      * to the force vector du to get the correct distribution of force between nodes.
      */
-    void apply_element_mass_matrix(vector12 du);
+    void apply_element_mass_matrix(vector12 &du);
 
     void volume_coord_to_xyz(scalar eta0, scalar eta1, scalar eta2, scalar eta3, arr3 &r);
 
@@ -326,7 +326,7 @@ private:
      */
     void calc_del2_matrix();
 
-    void add_diffusion_matrix(matrix12 V);
+    void add_diffusion_matrix(matrix12 &V);
 
     struct tetrahedron_gauss_point {
         scalar W;

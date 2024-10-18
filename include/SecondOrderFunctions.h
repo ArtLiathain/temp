@@ -61,6 +61,7 @@ namespace SecondOrderFunctions {
     struct abcd {
         scalar a, b, c, d;
     };
+    typedef std::array<std::array<abcd, 3>, 3> abcd3x3;
 
      static stu stu_lookup[10] ={
         {0, 0, 0},
@@ -89,7 +90,7 @@ namespace SecondOrderFunctions {
         psi[9] = 4 * t * u;
     } 
 
-     static void calc_grad_psi(std::array<arr3, NUM_NODES_QUADRATIC_TET> &grad_psi, scalar s, scalar t, scalar u, scalar J_inv[9]) {
+     static void calc_grad_psi(std::array<arr3, NUM_NODES_QUADRATIC_TET> &grad_psi, scalar s, scalar t, scalar u, vector9 &J_inv) {
         scalar dpsi1_by_dstu = 4 * (s + t + u) - 3;
         grad_psi[GRAD_PSI_1][0] = dpsi1_by_dstu * (J_inv[DS_BY_DX] + J_inv[DT_BY_DX] + J_inv[DU_BY_DX]);
         grad_psi[GRAD_PSI_1][1] = dpsi1_by_dstu * (J_inv[DS_BY_DY] + J_inv[DT_BY_DY] + J_inv[DU_BY_DY]);
@@ -148,7 +149,7 @@ namespace SecondOrderFunctions {
     } 
 
   /** Construct jacobian column coefficients */ 
-  static void calc_jacobian_column_coefficients(std::array<mesh_node*, NUM_NODES_QUADRATIC_TET> &n, abcd J_coeff[3][3]) {
+  static void calc_jacobian_column_coefficients(std::array<mesh_node*, NUM_NODES_QUADRATIC_TET> &n, abcd3x3 &J_coeff) {
         // dx/ds
         J_coeff[0][0].a = 4 * (n[0]->pos[0] + n[1]->pos[0] - 2 * n[4]->pos[0]);
         J_coeff[0][0].b = 4 * (n[0]->pos[0] - n[4]->pos[0] - n[5]->pos[0] + n[7]->pos[0]);
@@ -206,7 +207,7 @@ namespace SecondOrderFunctions {
         J_coeff[2][2].d = 4 * n[6]->pos[2] - 3 * n[0]->pos[2] - n[3]->pos[2];
     }
 
-   static scalar calc_det_J(abcd J_coeff[3][3], scalar s, scalar t, scalar u, scalar J_inv[9]) {
+   static scalar calc_det_J(std::array<std::array<abcd, 3>, 3> &J_coeff, scalar s, scalar t, scalar u, vector9&J_inv) {
         scalar J[3][3];
 
         // Construct Jacobian for the part of the element at (s, t, u)

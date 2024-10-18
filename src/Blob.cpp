@@ -1283,10 +1283,10 @@ void Blob::make_measurements() {
         /* Calculate angular momentum */
         // mass matrix
         const matrix4 MM = {
-            {.1, .05, .05, .05},
-            {.05, .1, .05, .05},
-            {.05, .05, .1, .05},
-            {.05, .05, .05, .1}
+            std::array{.1, .05, .05, .05},
+            std::array{.05, .1, .05, .05},
+            std::array{.05, .05, .1, .05},
+            std::array{.05, .05, .05, .1}
         };
 
 #ifdef FFEA_PARALLEL_WITHIN_BLOB

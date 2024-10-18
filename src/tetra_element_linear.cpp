@@ -86,9 +86,9 @@ void tetra_element_linear::add_K_alpha(scalar *K, int num_nodes) {
 void tetra_element_linear::get_grad_phi_at_stu(arr3 &grad_phi, scalar s, scalar t, scalar u) {
     std::array<arr3, NUM_NODES_QUADRATIC_TET> grad_psi = {};
 
-    SecondOrderFunctions::abcd J_coeff[3][3];
+    SecondOrderFunctions::abcd3x3 J_coeff = {};
     SecondOrderFunctions::calc_jacobian_column_coefficients(n, J_coeff);
-    scalar J_inv[9];
+    vector9 J_inv;
     scalar det_J = SecondOrderFunctions::calc_det_J(J_coeff, s, t, u, J_inv);
     SecondOrderFunctions::calc_grad_psi(grad_psi, s, t, u, J_inv);
 
@@ -140,7 +140,7 @@ void tetra_element_linear::calculate_electrostatic_forces() {
             {0.568813795204234229e-1, 0.314372873493192195, 0.314372873493192195, 0.314372873493192195}}
     };
 
-    SecondOrderFunctions::abcd J_coeff[3][3];
+    SecondOrderFunctions::abcd3x3 J_coeff = {};
     std::array<arr3, NUM_NODES_QUADRATIC_TET> grad_psi = {};
     std::array<scalar, NUM_NODES_QUADRATIC_TET> psi = {};
     std::array<arr3, NUM_NODES_QUADRATIC_TET> force = {};
@@ -149,7 +149,7 @@ void tetra_element_linear::calculate_electrostatic_forces() {
 
     SecondOrderFunctions::calc_jacobian_column_coefficients(n, J_coeff);
 
-    scalar J_inv[9];
+    vector9 J_inv = {};
 
     for (int i = 0; i < NUM_TET_GAUSS_QUAD_POINTS; i++) {
         scalar det_J = SecondOrderFunctions::calc_det_J(J_coeff, gauss_points[i].eta[0], gauss_points[i].eta[1], gauss_points[i].eta[2], J_inv);
@@ -186,7 +186,7 @@ void tetra_element_linear::calculate_electrostatic_forces() {
 }
 
 /* Calculates the Jacobian matrix for this element */
-void tetra_element_linear::calculate_jacobian(matrix3 J) {
+void tetra_element_linear::calculate_jacobian(matrix3 &J) {
     J[0][0] = n[1]->pos[0] - n[0]->pos[0];
     J[0][1] = n[1]->pos[1] - n[0]->pos[1];
     J[0][2] = n[1]->pos[2] - n[0]->pos[2];
@@ -217,7 +217,7 @@ void tetra_element_linear::calculate_jacobian(matrix3 J) {
  * element whose jacobian this is, which is stored in 'vol'.
  * @return True if the element has inverted
  */
-bool tetra_element_linear::calc_shape_function_derivatives_and_volume(matrix3 J) {
+bool tetra_element_linear::calc_shape_function_derivatives_and_volume(matrix3 &J) {
     scalar det;
 
     // Calculate shape function derivs from inverse jacobian directly into dpsi[]
@@ -339,7 +339,7 @@ void tetra_element_linear::print_structural_details() {
  */
 scalar tetra_element_linear::calc_volume() {
 
-	matrix3 J;
+	matrix3 J = {};
 	calculate_jacobian(J);
         calc_shape_function_derivatives_and_volume(J);
 	return vol;
@@ -348,9 +348,9 @@ scalar tetra_element_linear::calc_volume() {
 /*
  *
  */
-void tetra_element_linear::calc_elastic_force_vector(vector12 F) {
+void tetra_element_linear::calc_elastic_force_vector(vector12 &F) {
 	
-	matrix3 J, stress;
+	matrix3 J = {}, stress = {};
 	mat3_set_zero(stress);
 	vec12_set_zero(F);
 
@@ -364,7 +364,7 @@ void tetra_element_linear::calc_elastic_force_vector(vector12 F) {
 /*
  *
  */
-void tetra_element_linear::calc_deformation(matrix3 J) {
+void tetra_element_linear::calc_deformation(matrix3 &J) {
 	// Reset gradient deformation to zero
    	mat3_set_zero(F_ij);
 
@@ -372,7 +372,7 @@ void tetra_element_linear::calc_deformation(matrix3 J) {
     	mat3_mult_both_transposed(J, J_inv_0, F_ij);
 }
 
-void tetra_element_linear::add_shear_elastic_stress(matrix3 J, matrix3 stress) {
+void tetra_element_linear::add_shear_elastic_stress(matrix3 &J, matrix3 &stress) {
 
     // Reset gradient deformation to zero
     mat3_set_zero(F_ij);
@@ -395,7 +395,7 @@ void tetra_element_linear::add_shear_elastic_stress(matrix3 J, matrix3 stress) {
 /*
  *
  */
-void tetra_element_linear::add_bulk_elastic_stress(matrix3 stress) {
+void tetra_element_linear::add_bulk_elastic_stress(matrix3 &stress) {
 
     scalar c_2 = E - G * 2.0 / 3.0;
     scalar c = G * (1.0 - (vol_0 / vol)) + 0.5 * c_2 * ((vol / vol_0) - (vol_0 / vol));
@@ -435,7 +435,7 @@ void tetra_element_linear::add_fluctuating_stress(const SimulationParams &params
 /*
  * Applies the given stress tensor to the shape function derivatives to get the contribution to du
  */
-void tetra_element_linear::apply_stress_tensor(matrix3 stress, vector12 du) {
+void tetra_element_linear::apply_stress_tensor(matrix3 &stress, vector12 &du) {
     int i;
     for (i = 0; i < 3; i++) {
         du[4 * i] += vol * (dpsi[0] * stress[i][0] + dpsi[4] * stress[i][1] + dpsi[8] * stress[i][2]);
@@ -448,7 +448,7 @@ void tetra_element_linear::apply_stress_tensor(matrix3 stress, vector12 du) {
 /*
  * Sets the given 12-vector to the velocities of this element's four nodes,
  */
-void tetra_element_linear::get_element_velocity_vector(vector12 v) {
+void tetra_element_linear::get_element_velocity_vector(vector12 &v) {
     v[0] = n[0]->vel[0];
     v[1] = n[1]->vel[0];
     v[2] = n[2]->vel[0];
@@ -468,7 +468,7 @@ void tetra_element_linear::get_element_velocity_vector(vector12 v) {
 /*
  * Add this element's nodal forces to those given in the force 12-vector
  */
-void tetra_element_linear::add_element_force_vector(vector12 force) {
+void tetra_element_linear::add_element_force_vector(vector12 &force) {
     node_force[0][0] -= force[0];
     node_force[1][0] -= force[1];
     node_force[2][0] -= force[2];
@@ -525,15 +525,15 @@ void tetra_element_linear::print_viscosity_matrix() {
  * Applies the mass matrix (for a linear tetrahedral element of density rho and equilibrium volume vol_0)
  * to the force vector du to get the correct distribution of force between nodes.
  */
-void tetra_element_linear::apply_element_mass_matrix(vector12 du) {
+void tetra_element_linear::apply_element_mass_matrix(vector12 &du) {
     int i, j, k;
 
     // mass matrix
     const matrix4 M = {
-        {.1, .05, .05, .05},
-        {.05, .1, .05, .05},
-        {.05, .05, .1, .05},
-        {.05, .05, .05, .1}};
+        std::array{.1, .05, .05, .05},
+        std::array{.05, .1, .05, .05},
+        std::array{.05, .05, .1, .05},
+        std::array{.05, .05, .05, .1}};
 
     vector12 temp_du = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -611,7 +611,7 @@ void tetra_element_linear::calc_del2_matrix() {
     //			printf("%e %e %e %e\n", del2.u03, del2.u13, del2.u23, del2.u33);
 }
 
-void tetra_element_linear::add_diffusion_matrix(matrix12 V) {
+void tetra_element_linear::add_diffusion_matrix(matrix12 &V) {
     int i;
 
     // Drop each upper triangle of this diffusion matrix along the block diagonal

@@ -64,7 +64,7 @@ void NoMassCGSolver::init(std::vector<mesh_node> &node, std::vector<tetra_elemen
     sparsity_pattern_viscosity_matrix.init(num_rows);
 
     scalar *mem_loc;
-    matrix3 J;
+    matrix3 J = {};
 
     // Create a temporary lookup for checking if a node is 'pinned' or not.
     // if it is, then only a 1 on the diagonal corresponding to that node should

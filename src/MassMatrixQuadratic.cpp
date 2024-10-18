@@ -80,14 +80,14 @@ void MassMatrixQuadratic::build(std::array<mesh_node*, NUM_NODES_QUADRATIC_TET> 
             {0.568813795204234229e-1, 0.314372873493192195, 0.314372873493192195, 0.314372873493192195}}
     };
 
-    SecondOrderFunctions::abcd J_coeff[3][3];
+    SecondOrderFunctions::abcd3x3 J_coeff = {};
     std::array<scalar, NUM_NODES_QUADRATIC_TET> psi = {};
 
     SecondOrderFunctions::calc_jacobian_column_coefficients(n, J_coeff);
 
     zero();
 
-    scalar J_inv[9];
+    vector9 J_inv;
 
     for (int i = 0; i < NUM_TET_GAUSS_QUAD_POINTS; i++) {
         scalar det_J = SecondOrderFunctions::calc_det_J(J_coeff, gauss_points[i].eta[0], gauss_points[i].eta[1], gauss_points[i].eta[2], J_inv);

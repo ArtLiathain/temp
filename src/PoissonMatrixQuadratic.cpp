@@ -82,14 +82,14 @@ void PoissonMatrixQuadratic::build(std::array<mesh_node*, NUM_NODES_QUADRATIC_TE
             {0.568813795204234229e-1, 0.314372873493192195, 0.314372873493192195, 0.314372873493192195}}
     };
 
-    SecondOrderFunctions::abcd J_coeff[3][3];
+    SecondOrderFunctions::abcd3x3 J_coeff = {};
     std::array<arr3, NUM_NODES_QUADRATIC_TET> grad_psi = {};
 
     SecondOrderFunctions::calc_jacobian_column_coefficients(n, J_coeff);
 
     zero();
 
-    scalar J_inv[9];
+    vector9 J_inv = {};
 
     for (int i = 0; i < NUM_TET_GAUSS_QUAD_POINTS; i++) {
         scalar det_J = SecondOrderFunctions::calc_det_J(J_coeff, gauss_points[i].eta[0], gauss_points[i].eta[1], gauss_points[i].eta[2], J_inv);
@@ -147,7 +147,7 @@ scalar PoissonMatrixQuadratic::get_K_alpha_value(int i, int j) {
 /* */
 void PoissonMatrixQuadratic::add_grad_dot_products(std::array<arr3, NUM_NODES_QUADRATIC_TET> &grad_psi, scalar det_J, scalar weight) {
     int c = 0;
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < NUM_NODES_QUADRATIC_TET; i++) {
         for (int j = 0; j <= i; j++) {
             K_alpha[c] += det_J * weight * grad_dot(grad_psi[i], grad_psi[j]);
             c++;
